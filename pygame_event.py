@@ -10,13 +10,14 @@ WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+PURPLE=(127,0,127)
 
 # Set the height and width of the screen
 size = [400, 300]
 screen = pygame.display.set_mode(size)
 font = pygame.font.SysFont("consolas", 20)
 
-pygame.display.set_caption("Game Title")
+pygame.display.set_caption("Ocean View SOS game!")
 
 # Loop until the user clicks the close button.
 done = False
@@ -32,6 +33,8 @@ def printText(msg, color='BLACK', pos=(50, 50)):
 
     screen.blit(textSurface, textRect)
 
+texty=""
+chktexty=0
 
 while not done:
 
@@ -55,15 +58,27 @@ while not done:
 
     # Clear the screen and set the screen background
     screen.fill(WHITE)
+    printText('Please enter the \'frog\'', 'PURPLE', (50, 25))
+    printText(texty, 'RED', (50, 130))
 
     # Print red text if user pressed any key.
     if flag == True:
+        if len(texty)==4: texty=""
         printText('you just key down!!', 'RED')
         printText('--> you pressed any key.', 'RED', (50, 70))
         printText('Pressed Key : ' + buttons[0], 'RED', (50, 90))
+        if chktexty==0: texty+=buttons[0]
+        chktexty=1
+
+    if len(texty)==4:
+        if(texty=='frog'):
+            printText('What the hells going on?', 'BLACK', (50, 155))
+        else:
+            printText('Not Frog!', 'BLACK', (50, 155))
 
     # Print blue text if user released any key.
-    elif flag == False:
+    if flag == False:
+        chktexty=0
         printText('you just key up!!', 'BLUE')
         printText('--> released what you pressed.', 'BLUE', (50, 70))
 
