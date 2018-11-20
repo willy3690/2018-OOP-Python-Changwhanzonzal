@@ -39,7 +39,7 @@ def moving():
 pygame.init()
 display = pygame.display.set_mode((wid, hei))
 pygame.display.set_caption("how_to_move")
-frog = pygame.image.load('C:/Users/willy/Desktop/sasa/python/images/frog_arrived.png') # 사진
+frog = pygame.image.load('C:/Users/willy/Desktop/sasa/python/images/frog_arrived.png') # 사진파일 
 frog = pygame.transform.scale(frog, (50, 50))
 y_change = 0
 x_change = 0
