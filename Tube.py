@@ -9,7 +9,7 @@ pygame.init()
 display = pygame.display.set_mode((wid, hei))
 display.fill(White)
 pygame.display.set_caption("how_to_move")
-Tube_image = pygame.image.load('C:/Users/willy/Desktop/Tube.png')
+Tube_image = pygame.image.load('C:/Users/user/Pictures/testimage1.png')
 Tube_image = pygame.transform.scale(Tube_image, (50, 50))
 x = 10
 y = 10
