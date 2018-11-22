@@ -9,7 +9,7 @@ hei = 512
 pygame.init()
 display = pygame.display.set_mode((wid, hei))
 display.fill(White)
-pygame.display.set_caption("how_to_move")
+pygame.display.set_caption("tube")
 
 
 imagename1="C:/Users/user/Pictures/testimage"+(str)(random.randrange(0,3))+".png"

@@ -9,7 +9,7 @@ pygame.init()
 display = pygame.display.set_mode((wid, hei))
 display.fill(White)
 pygame.display.set_caption("how_to_move")
-Tube_image = pygame.image.load('C:/Users/user/Pictures/testimage1.png')
+Tube_image = pygame.image.load('C:\\Users\willy\Desktop\Tube.png')
 Tube_image = pygame.transform.scale(Tube_image, (50, 50))
 x = 10
 y = 10
@@ -18,7 +18,7 @@ loc_num_y = (400, 400, 400, 400)
 
 
 def Show_Tube(a, b):
-    while True:
+    for i in range(1000):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
