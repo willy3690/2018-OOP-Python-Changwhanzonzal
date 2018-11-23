@@ -35,17 +35,18 @@ def printText(msg, color='BLACK', pos=(50, 50)):
 texty = ""
 chktexty = 0
 
+
 while not done:
 
     # This limits the while loop to a max of 10 times per second.
     # Leave this out and we will use all CPU we can.
-    #clock.tick(10000)
+    clock.tick(100)
 
     # Main Event Loop
     for event in pygame.event.get():  # User did something
         if event.type == pygame.KEYDOWN:  # If user release what he pressed.
             pressed = pygame.key.get_pressed()
-            buttons = [pygame.key.name(k) for k, v in enumerate(pressed) if v]
+            buttons = ([pygame.key.name(k) for k, v in enumerate(pressed) if v])
             if buttons[0] == 'backspace':
                 if len(texty) >= 1:
                     texty = texty[0:len(texty)-1]
@@ -72,10 +73,12 @@ while not done:
             texty = ""
         printText('you just key down!!', 'RED')
         printText('--> you pressed any key.', 'RED', (50, 70))
-        for i in buttons:
-            printText('Pressed Key : ' + i, 'RED', (50, 90))
-            if chktexty == 0: texty += i
-            chktexty=1
+        if buttons[0] == "":
+            continue
+        printText('Pressed Key : ' + buttons[0], 'RED', (50, 90))
+        if chktexty == 0: texty += buttons[0]
+        chktexty = 1
+        buttons = []
 
     if len(texty) == 4:
         if texty =='frog':
