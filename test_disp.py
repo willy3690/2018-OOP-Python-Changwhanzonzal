@@ -85,13 +85,15 @@ while True:
             pygame.quit()
             sys.exit()
     pygame.display.update()
-    time.sleep(0.0001)
+    time.sleep(0.1)
     display.fill(White)
     printimage(wallpaper)
     printimage(onimage)
     printimage(char1)
+
     printText('Please enter the word')
     printText(texty, "black", (0, 532))
+
     move=[2, -2, 0]
     ymove = move[random.randrange(0, 3)]
     xmove = move[random.randrange(0, 3)]
