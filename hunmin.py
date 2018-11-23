@@ -65,7 +65,11 @@ while True:
         if event.type == pygame.KEYDOWN:
             pressed = pygame.key.get_pressed()
             buttons = ([pygame.key.name(k) for k, v in enumerate(pressed) if v])
-            if buttons[0] == 'backspace':
+            print(buttons)
+            if len(buttons)==0:
+                texty+='한영키'
+                continue
+            elif buttons[0] == 'backspace':
                 if len(texty) >= 1:
                     texty = texty[0:len(texty) - 1]
                 continue
@@ -91,7 +95,7 @@ while True:
             pygame.quit()
             sys.exit()
     pygame.display.update()
-    time.sleep(0.1)
+    #time.sleep(0.1)
     display.fill(White)
     printimage(wallpaper)
     printimage(onimage)
