@@ -25,7 +25,7 @@ class Charactor:
 
 class Tube:
     def __init__(self,inputx,inputy,wid,hei):
-        self.imagename="C:/Users/user/Desktop/pyproimage/tubevector.png"
+        self.imagename="pyproimage/tubevector.png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
         self.frog = pygame.transform.scale(self.frog, (wid,hei))
         self.x = inputx
@@ -39,9 +39,9 @@ class Otherimage:
         self.x = inputx
         self.y = inputy
 
-wallpaper=Otherimage(0,212,800,300,"C:/Users/user/Desktop/pyproimage/wallpaper.png")
+wallpaper=Otherimage(0,212,800,300,"pyproimage/wallpaper.png")
 
-char1=Otherimage(80,350,100,100,"C:/Users/user/Desktop/pyproimage/char2.png")
+char1=Otherimage(80,350,100,100,"pyproimage/char2.png")
 
 onimage=Tube(10,400,240,100)
 
