@@ -26,9 +26,8 @@ display = pygame.display.set_mode((wid, hei))
 display.fill(White)
 pygame.display.set_caption("해상구조 SOS")
 texty = ""
-flag = False
 input_word = ""
-
+pressed_button = list()
 
 class Charactor:
     def __init__(self,inputx,inputy,wid,hei):
@@ -66,21 +65,28 @@ while True:
         if event.type == pygame.KEYDOWN:
             pressed = pygame.key.get_pressed()
             buttons = ([pygame.key.name(k) for k, v in enumerate(pressed) if v])
-            if buttons[0] == 'backspace':
-                if len(texty) >= 1:
-                    texty = texty[0:len(texty) - 1]
-                continue
-            elif buttons[0] == 'return':
-                input_word = texty
-                texty = ""
-                continue
-            elif len(buttons[0]) > 1:
-                continue
-            else:
-                texty = texty + buttons[0]
-            flag = True
+            for i in range(len(buttons)):
+                if len(buttons) >= 2:
+                    if pressed_button.count(buttons[i]) >= 1:
+                        continue
+                    else:
+                        pressed_button.extend(buttons[i])
+                else:
+                    pressed_button = buttons
+                if buttons[i] == 'backspace':
+                    if len(texty) >= 1:
+                        texty = texty[0:len(texty) - 1]
+                    continue
+                elif buttons[i] == 'return':
+                    input_word = texty
+                    texty = ""
+                    continue
+                elif len(buttons[i]) > 1:
+                    continue
+                else:
+                    texty = texty + buttons[i]
         elif event.type == pygame.KEYUP:  # If user press any key.
-            flag = False
+            continue
         elif event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
