@@ -32,7 +32,7 @@ texty = ""
 input_word = ""
 pressed_button = list()
 
-class Charactor:
+class item:
     def __init__(self,inputx,inputy,wid,hei):
         self.imagename="C:/Users/user/Desktop/pyproimage/image"+(str)(random.randrange(0,10)+1)+".png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
@@ -60,9 +60,10 @@ class Otherimage:
 
 
 wallpaper=Otherimage(0,212,800,300,"pyproimage/wallpaper.png")
+boom=Otherimage(-50,100,100,100,"pyproimage/boom.png")
 char1=Otherimage(80,350,100,100,"pyproimage/char2.png")
 onimage=Tube(10,400,240,100)
-
+item1=item(800,100,100,100)
 
 score=0
 while True:
@@ -85,7 +86,9 @@ while True:
                         texty = texty[0:len(texty) - 1]
                     continue
                 elif buttons[i] == 'return':
-                    if (texty == wordlist[0]): score += 1
+                    if (texty == wordlist[0]):
+                        score += 1
+                        item1 = item(800, 100, 100, 100)
                     input_word = texty
                     texty = ""
                     random.shuffle(wordlist)
@@ -107,6 +110,7 @@ while True:
     printimage(wallpaper)
     printimage(onimage)
     printimage(char1)
+    printimage(item1)
 
     printText(wordlist[0],"black",(300,512))
     printText('Please enter the word')
@@ -118,6 +122,11 @@ while True:
     xmove = move[random.randrange(0, 3)]
     if char1.x+xmove<90 and char1.x+xmove>70: char1.x+=xmove
     if char1.y + ymove < 360 and char1.y + ymove > 340: char1.y+=ymove
+    if(item1.x>-100):
+        item1.x-=2
+        if(item1.x<-96):
+            printimage(boom)
+        if(item1.x<-98): item1 = item(800, 100, 100, 100)
 
 #  https://blog.naver.com/rsj0908/221007425974  에서 가져옴
 # https://pixlr.com/editor/ 에서 이미지 수정

@@ -101,7 +101,6 @@ while True:
             pygame.quit()
             sys.exit()
     pygame.display.update()
-    #.time.sleep(0.1)
     display.fill(White)
     printimage(wallpaper)
     printimage(onimage)
