@@ -1,8 +1,6 @@
-황창환
-배민열
-파이썬
-자바
-씨언어
-요구르트
-마인크래프트
-요거트
+gotit
+andme
+byebye
+end
+shift
+callname
