@@ -81,6 +81,9 @@ while True:
                     input_word = texty
                     texty = ""
                     continue
+                elif buttons[0] == 'space':
+                    texty += ' '
+                    continue
                 elif len(buttons[i]) > 1:
                     continue
                 else:
