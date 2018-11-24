@@ -74,6 +74,8 @@ while True:
                 if len(buttons) >= 2:
                     if pressed_button.count(buttons[i]) >= 1:
                         continue
+                    elif (buttons[1]=='left shift'):
+                        buttons[0]=buttons[0].upper()
                     else:
                         pressed_button.extend(buttons[i])
                 else:

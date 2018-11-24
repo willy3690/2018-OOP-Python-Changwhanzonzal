@@ -105,7 +105,7 @@ while True:
     printText('안녕',"black",(400,512))
     printText(texty, "black", (0, 532))
 
-    move=[2, -2, 0]
+    move=[0.2, -0.2, 0]
     ymove = move[random.randrange(0, 3)]
     xmove = move[random.randrange(0, 3)]
     if char1.x+xmove<90 and char1.x+xmove>70: char1.x+=xmove
