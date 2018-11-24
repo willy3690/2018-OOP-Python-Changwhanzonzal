@@ -1,9 +1,12 @@
-#sdfafsd
 import pygame, sys
 import random
 import threading
 import time
-
+import random
+fp = open('pyprowords.txt', 'r')
+wordlist=[]
+for line in fp:
+    wordlist.append(line.strip())
 
 def printimage(image):
     display.blit(image.frog,(image.x,image.y))
@@ -60,6 +63,8 @@ wallpaper=Otherimage(0,212,800,300,"pyproimage/wallpaper.png")
 char1=Otherimage(80,350,100,100,"pyproimage/char2.png")
 onimage=Tube(10,400,240,100)
 
+
+score=0
 while True:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -78,8 +83,10 @@ while True:
                         texty = texty[0:len(texty) - 1]
                     continue
                 elif buttons[i] == 'return':
+                    if (texty == wordlist[0]): score += 1
                     input_word = texty
                     texty = ""
+                    random.shuffle(wordlist)
                     continue
                 elif buttons[0] == 'space':
                     texty += ' '
@@ -94,14 +101,16 @@ while True:
             pygame.quit()
             sys.exit()
     pygame.display.update()
-    time.sleep(0.1)
+    #.time.sleep(0.1)
     display.fill(White)
     printimage(wallpaper)
     printimage(onimage)
     printimage(char1)
 
+    printText(wordlist[0],"black",(300,512))
     printText('Please enter the word')
     printText(texty, "black", (0, 532))
+    printText('Score: '+str(score),"black",(0,0))
 
     move=[2, -2, 0]
     ymove = move[random.randrange(0, 3)]
