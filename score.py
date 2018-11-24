@@ -66,6 +66,7 @@ onimage=Tube(10,400,240,100)
 item1=item(800,100,100,100)
 
 score=0
+itemvel=2
 while True:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -87,6 +88,7 @@ while True:
                     continue
                 elif buttons[i] == 'return':
                     if (texty == wordlist[0]):
+                        itemvel += 0.2
                         score += 1
                         item1 = item(800, 100, 100, 100)
                     input_word = texty
@@ -123,7 +125,7 @@ while True:
     if char1.x+xmove<90 and char1.x+xmove>70: char1.x+=xmove
     if char1.y + ymove < 360 and char1.y + ymove > 340: char1.y+=ymove
     if(item1.x>-100):
-        item1.x-=2
+        item1.x-=itemvel
         if(item1.x<-96):
             printimage(boom)
         if(item1.x<-98): item1 = item(800, 100, 100, 100)
