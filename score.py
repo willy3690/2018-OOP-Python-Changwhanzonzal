@@ -34,7 +34,7 @@ pressed_button = list()
 
 class item:
     def __init__(self,inputx,inputy,wid,hei):
-        self.imagename="C:/Users/user/Desktop/pyproimage/image"+(str)(random.randrange(0,10)+1)+".png"
+        self.imagename="pyproimage/image"+(str)(random.randrange(0,10)+1)+".png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
         self.frog = pygame.transform.scale(self.frog, (wid,hei))
         self.x = inputx
