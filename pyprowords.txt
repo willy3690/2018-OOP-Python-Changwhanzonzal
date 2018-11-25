@@ -25,7 +25,6 @@ gamete
 replicate
 centromere
 mitosis
-cytokinesis
 interphase
 prophase
 metaphase
@@ -43,7 +42,6 @@ aster
 cohesin
 elongate
 cleavage
-cell plate
 checkpoint
 cyclin
 MPF
