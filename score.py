@@ -128,7 +128,7 @@ while True:
         item1.x-=itemvel
         if(item1.x<-96):
             printimage(boom)
-            if item1.x<-98 and score>0: score-=1
+            if item1.x<-98 and score>0: score-=0.100
         if(item1.x<-98): item1 = item(800, 100, 100, 100)
 
 #  https://blog.naver.com/rsj0908/221007425974  에서 가져옴
