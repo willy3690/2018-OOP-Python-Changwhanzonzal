@@ -19,19 +19,15 @@ ratio
 urban
 downtown
 middle
-reproduction
 genome
 chromosome
-somatic cell
 gamete
 replicate
 centromere
 mitosis
 cytokinesis
-mitotic phase
 interphase
 prophase
-prometaphase
 metaphase
 anaphase
 telophase
@@ -44,8 +40,6 @@ nuclei
 centrosome
 spindle
 aster
-kinetochore
-metaphase plate
 cohesin
 elongate
 cleavage
