@@ -95,7 +95,7 @@ while True:
                 if len(buttons) >= 2:
                     if pressed_button.count(buttons[i]) >= 1:
                         continue
-                    elif buttons[1] == 'left shift':
+                    elif buttons[-1] == 'left shift' or buttons[-1] == 'right shift':
                         buttons[0] = buttons[0].upper()
                     else:
                         pressed_button.extend(buttons[i])
@@ -116,7 +116,11 @@ while True:
                         for j in range(4):
                             if texty == tube_word[j]:
                                 score += 1
-                                new_player_tube = Tube(130, tube_list[-1].y - 50, 250, 100)
+                                try:
+                                    new_player_tube = Tube(130, tube_list[len(tube_list)-1].y - 50, 250, 100)
+                                except IndexError:
+                                    pygame.quit()
+                                    sys.exit()
                                 char1.y = char1.y - 50
                                 tube_list.append(new_player_tube)
                                 if j == 0:
@@ -151,6 +155,11 @@ while True:
             pygame.quit()
             sys.exit()
         char1.y = char1.y + 50
+        start_time = time.time()
+    if len(tube_list) >= 6:
+        tube_list = [onimage]
+        delta_t -= 0.5
+        char1.y = 250
         start_time = time.time()
     pygame.display.update()
     display.fill(White)
