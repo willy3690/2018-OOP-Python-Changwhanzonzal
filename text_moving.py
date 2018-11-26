@@ -31,7 +31,10 @@ pygame.display.set_caption("해상구조 SOS")
 texty = ""
 input_word = ""
 pressed_button = list()
-vel_plus = 0.01
+vel_plus = 0.05
+delta_t = 5
+start_time = time.time()
+
 
 class item:
     def __init__(self, inputx, inputy, w, h):
@@ -64,8 +67,8 @@ class Otherimage:
 
 wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
 boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
-char1 = Otherimage(200, 200, 100, 100, "pyproimage/char2.png")
-onimage = Tube(130, 250, 240, 100)
+char1 = Otherimage(200, 250, 100, 100, "pyproimage/char2.png")
+onimage = Tube(130, 300, 240, 100)
 item1 = item(800, 100, 100, 100)
 tube1 = Tube(0, 400, 240, 100)
 tube2 = Tube(200, 400, 240, 100)
@@ -74,6 +77,7 @@ tube4 = Tube(600, 400, 240, 100)
 score = float(0)
 itemvel = 1
 tube_word = [tube1.word, tube2.word, tube3.word, tube4.word]
+tube_list = [onimage]
 
 
 def del_tube(temp1, temp2):
@@ -112,6 +116,9 @@ while True:
                         for j in range(4):
                             if texty == tube_word[j]:
                                 score += 1
+                                new_player_tube = Tube(130, tube_list[-1].y - 50, 250, 100)
+                                char1.y = char1.y - 50
+                                tube_list.append(new_player_tube)
                                 if j == 0:
                                     tube1 = del_tube(0, 0)
                                     break
@@ -137,16 +144,22 @@ while True:
         elif event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+    if time.time() - start_time >= delta_t:
+        try:
+            tube_list.pop()
+        except IndexError:
+            pygame.quit()
+            sys.exit()
+        char1.y = char1.y + 50
+        start_time = time.time()
     pygame.display.update()
     display.fill(White)
     printimage(wallpaper)
-    printimage(onimage)
+    for i in tube_list:
+        printimage(i)
     printimage(char1)
     printimage(item1)
-    printimage(tube1)
-    printimage(tube2)
-    printimage(tube3)
-    printimage(tube4)
+    printimage(tube1), printimage(tube2), printimage(tube3), printimage(tube4)
     printText(tube1.word, color= "White", pos=(tube1.x + 70, tube1.y + 50))
     printText(tube2.word, color= "White", pos=(tube2.x + 70, tube2.y + 50))
     printText(tube3.word, color= "White", pos=(tube3.x + 70, tube3.y + 50))
