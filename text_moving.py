@@ -67,17 +67,18 @@ class Otherimage:
 
 wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
 boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
-char1 = Otherimage(200, 250, 100, 100, "pyproimage/char2.png")
+char1 = Otherimage(200, 200, 100, 100, "pyproimage/char2.png")
 onimage = Tube(130, 300, 240, 100)
+onimage2 = Tube(130, 250, 240, 100)
 item1 = item(800, 100, 100, 100)
 tube1 = Tube(0, 400, 240, 100)
 tube2 = Tube(200, 400, 240, 100)
 tube3 = Tube(400, 400, 240, 100)
 tube4 = Tube(600, 400, 240, 100)
 score = float(0)
-itemvel = 1
+itemvel = 2
 tube_word = [tube1.word, tube2.word, tube3.word, tube4.word]
-tube_list = [onimage]
+tube_list = [onimage, onimage2]
 
 
 def del_tube(temp1, temp2):
@@ -157,9 +158,9 @@ while True:
         char1.y = char1.y + 50
         start_time = time.time()
     if len(tube_list) >= 6:
-        tube_list = [onimage]
+        tube_list = [onimage, onimage2]
         delta_t -= 0.5
-        char1.y = 250
+        char1.y = 200
         start_time = time.time()
     pygame.display.update()
     display.fill(White)
