@@ -58,7 +58,7 @@ class Tube:
 
 class Charac:
     def __init__(self,inputx=200, inputy=200, w=100, h=100):
-        self.charnum = random.randrange(1, 2) + 1
+        self.charnum = random.randrange(1, 3) + 1
         self.imagename = "pyproimage/char" + (str)(self.charnum) + ".png"
         self.frog = pygame.image.load(self.imagename)  # 사진파일
         self.frog = pygame.transform.scale(self.frog, (w, h))
@@ -83,7 +83,6 @@ item1 = item(800, 100, 100, 100)
 
 tube_list=[]
 for i in range(4): tube_list.append(Tube(200*i,400))
-print(tube_list[0].word)
 tube_list.append(onimage)
 tube_list.append(onimage2)
 right=2
@@ -99,11 +98,10 @@ def stacktube():
     char1.y = char1.y - 30
 
 def itemeffect(num):
+    global char1
     print(num)
-    if num==7:
-        for i in range(10): stacktube()
-    #if num==2:
-    #    char1=Charac(char1.x,char1.y)
+    if num==7: for i in range(10): stacktube()
+    if num==2: char1=Charac(char1.x,char1.y)
 
 while True:
     for event in pygame.event.get():
@@ -129,8 +127,8 @@ while True:
                     if texty == item1.word:
                         itemvel += vel_plus
                         score += 1
-                        itemeffect(item1.itemnum)
                         item1 = item(800, 100, 100, 100)
+                        itemeffect(item1.itemnum)
                         chk = True
                     if not chk:
                         for j in range(4):
