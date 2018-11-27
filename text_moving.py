@@ -76,6 +76,7 @@ tube2 = Tube(200, 400, 240, 100)
 tube3 = Tube(400, 400, 240, 100)
 tube4 = Tube(600, 400, 240, 100)
 score = float(0)
+pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 itemvel = 2
 tube_word = [tube1.word, tube2.word, tube3.word, tube4.word]
 tube_list = [onimage, onimage2]
@@ -144,6 +145,9 @@ while True:
                     continue
                 else:
                     texty = texty + buttons[i]
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if event.pos[0] >= 750 and event.pos[1] <= 50:
+                pass
         elif event.type == pygame.KEYUP:  # If user press any key.
             continue
         elif event.type == pygame.QUIT:
@@ -167,6 +171,7 @@ while True:
     printimage(wallpaper)
     for i in tube_list:
         printimage(i)
+    printimage(pause_image)
     printimage(char1)
     printimage(item1)
     printimage(tube1), printimage(tube2), printimage(tube3), printimage(tube4)

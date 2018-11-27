@@ -130,6 +130,9 @@ while True:
                     continue
                 else:
                     texty = texty + buttons[i]
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if event.pos[0] >= 750 and event.pos[1] <= 50:
+                pass
         elif event.type == pygame.KEYUP:  # If user press any key.
             continue
         elif event.type == pygame.QUIT:
