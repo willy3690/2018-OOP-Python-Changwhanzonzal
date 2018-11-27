@@ -178,6 +178,12 @@ while True:
     printText('Please enter the word')
     printText(texty, "black", (0, 532))
     printText('Score: ' + str(round(score, 1)), "black", (0, 0))
+    if item1.x > -100:
+        item1.x -= itemvel
+        if item1.x < -96:
+            printimage(boom)
+            if item1.x < -98 and score > 0: score -= 0.1
+        if item1.x < -98: item1 = item(800, 100, 100, 100)
 
 #  https://blog.naver.com/rsj0908/221007425974  에서 가져옴
 # https://pixlr.com/editor/ 에서 이미지 수정
