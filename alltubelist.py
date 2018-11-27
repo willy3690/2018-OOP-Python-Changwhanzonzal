@@ -71,13 +71,15 @@ char1 = Otherimage(200, 200, 100, 100, "pyproimage/char2.png")
 onimage = Tube(130, 300, 240, 100)
 onimage2 = Tube(130, 270, 240, 100)
 item1 = item(800, 100, 100, 100)
-
+pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
+pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/boom.png")
+play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
 tube_list=[]
 for i in range(4): tube_list.append(Tube(200*i,400,240,100))
 tube_list.append(onimage)
 tube_list.append(onimage2)
 right=2
-
+flag = False
 score = float(0)
 itemvel = 2
 
@@ -132,12 +134,23 @@ while True:
                     texty = texty + buttons[i]
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if event.pos[0] >= 750 and event.pos[1] <= 50:
-                pass
+                if flag:
+                    flag = False
+                else:
+                    flag = True
+                print("1")
         elif event.type == pygame.KEYUP:  # If user press any key.
             continue
         elif event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+    if flag:
+        pygame.display.update()
+        display.fill(White)
+        printimage(pause_im1)
+        printimage(play_image)
+        start_time = 2 * time.time() - start_time
+        continue
     if time.time() - start_time >= delta_t:
         try:
             tube_list.pop()
@@ -158,9 +171,7 @@ while True:
     for tubes in tube_list: printimage(tubes)
     for i in range(4):
         printText(tube_list[i].word, color= "White", pos=(tube_list[i].x + 70, tube_list[i].y + 50))
-    printimage(char1)
-    printimage(item1)
-
+    printimage(char1), printimage(item1), printimage(pause_image)
     printText(item1.word, pos=(item1.x + 20, item1.y + 100))
     printText('Please enter the word')
     printText(texty, "black", (0, 532))
