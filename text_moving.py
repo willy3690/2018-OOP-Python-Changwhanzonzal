@@ -55,7 +55,7 @@ class Tube:
         self.x = inputx
         self.y = inputy
         self.word = random.choice(wordlist)
-
+#get
 
 class Otherimage:
     def __init__(self, inputx, inputy, w, h, imaname):
