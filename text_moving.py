@@ -179,17 +179,5 @@ while True:
     printText(texty, "black", (0, 532))
     printText('Score: ' + str(round(score, 1)), "black", (0, 0))
 
-    move = [2, -2, 0]
-    ymove = move[random.randrange(0, 3)]
-    xmove = move[random.randrange(0, 3)]
-    if 90 > char1.x + xmove > 70: char1.x += xmove
-    if 360 > char1.y + ymove > 340: char1.y += ymove
-    if item1.x > -100:
-        item1.x -= itemvel
-        if item1.x < -96:
-            printimage(boom)
-            if item1.x < -98 and score > 0: score -= 0.1
-        if item1.x < -98: item1 = item(800, 100, 100, 100)
-
 #  https://blog.naver.com/rsj0908/221007425974  에서 가져옴
 # https://pixlr.com/editor/ 에서 이미지 수정
