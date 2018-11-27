@@ -1,5 +1,4 @@
 import pygame, sys
-import random
 import threading
 import time
 import random
@@ -40,7 +39,6 @@ class item:
         self.x = inputx
         self.y = inputy
 
-
 class Tube:
     def __init__(self,inputx,inputy,wid,hei):
         self.imagename="pyproimage/tubevector.png"
@@ -48,7 +46,6 @@ class Tube:
         self.frog = pygame.transform.scale(self.frog, (wid,hei))
         self.x = inputx
         self.y = inputy
-
 
 class Otherimage:
     def __init__(self,inputx,inputy,wid,hei,imaname):
@@ -58,7 +55,6 @@ class Otherimage:
         self.x = inputx
         self.y = inputy
 
-
 wallpaper=Otherimage(0,212,800,300,"pyproimage/wallpaper.png")
 boom=Otherimage(-50,100,100,100,"pyproimage/boom.png")
 char1=Otherimage(80,350,100,100,"pyproimage/char2.png")
@@ -67,9 +63,11 @@ item1=item(800,100,100,100)
 
 score=0
 itemvel=2
+backspacetime=0
 while True:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
+            print("asdf")
             pressed = pygame.key.get_pressed()
             buttons = ([pygame.key.name(k) for k, v in enumerate(pressed) if v])
             for i in range(len(buttons)):
@@ -108,6 +106,7 @@ while True:
             pygame.quit()
             sys.exit()
     pygame.display.update()
+
     display.fill(White)
     printimage(wallpaper)
     printimage(onimage)
