@@ -55,7 +55,15 @@ class Tube:
         self.x = inputx
         self.y = inputy
         self.word = random.choice(wordlist)
-#get
+
+class Charac:
+    def __init__(self,inputx=200, inputy=200, w=100, h=100):
+        self.charnum = random.randrange(1, 2) + 1
+        self.imagename = "pyproimage/char" + (str)(self.charnum) + ".png"
+        self.frog = pygame.image.load(self.imagename)  # 사진파일
+        self.frog = pygame.transform.scale(self.frog, (w, h))
+        self.x = inputx
+        self.y = inputy
 
 class Otherimage:
     def __init__(self, inputx, inputy, w, h, imaname):
@@ -68,13 +76,14 @@ class Otherimage:
 
 wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
 boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
-char1 = Otherimage(200, 200, 100, 100, "pyproimage/char2.png")
+char1 = Charac()
 onimage = Tube(130, 300)
 onimage2 = Tube(130, 270)
 item1 = item(800, 100, 100, 100)
 
 tube_list=[]
 for i in range(4): tube_list.append(Tube(200*i,400))
+print(tube_list[0].word)
 tube_list.append(onimage)
 tube_list.append(onimage2)
 right=2
@@ -93,6 +102,8 @@ def itemeffect(num):
     print(num)
     if num==7:
         for i in range(10): stacktube()
+    #if num==2:
+    #    char1=Charac(char1.x,char1.y)
 
 while True:
     for event in pygame.event.get():
@@ -128,7 +139,6 @@ while True:
                                 stacktube()
                                 tube_list[j] = Tube(tube_list[j].x, tube_list[j].y)
                                 break
-
                     texty = ""
                     continue
                 elif buttons[0] == 'space':
@@ -162,16 +172,13 @@ while True:
     pygame.display.update()
     display.fill(White)
     printimage(wallpaper)
-<<<<<<< HEAD
 
     for tubes in tube_list: printimage(tubes)
     for i in range(4):
         printText(tube_list[i].word, color= "White", pos=(tube_list[i].x + 70, tube_list[i].y + 50))
-=======
-    for i in tube_list:
-        printimage(i)
+
     printimage(pause_image)
->>>>>>> origin/master
+
     printimage(char1)
     printimage(item1)
 
