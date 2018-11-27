@@ -38,8 +38,7 @@ start_time = time.time()
 
 class item:
     def __init__(self, inputx, inputy, w, h):
-        self.itemnum=random.randrange(0,10)+1
-        self.imagename = "pyproimage/image"+(str)(self.itemnum)+".png"
+        self.imagename = "pyproimage/image"+(str)(random.randrange(0,10)+1)+".png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
         self.frog = pygame.transform.scale(self.frog, (w,h))
         self.x = inputx
@@ -48,14 +47,14 @@ class item:
 
 
 class Tube:
-    def __init__(self, inputx, inputy, w=240, h=100):
+    def __init__(self, inputx, inputy, w, h):
         self.imagename="pyproimage/tubevector.png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
         self.frog = pygame.transform.scale(self.frog, (w, h))
         self.x = inputx
         self.y = inputy
         self.word = random.choice(wordlist)
-#get
+
 
 class Otherimage:
     def __init__(self, inputx, inputy, w, h, imaname):
@@ -69,29 +68,24 @@ class Otherimage:
 wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
 boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
 char1 = Otherimage(200, 200, 100, 100, "pyproimage/char2.png")
-onimage = Tube(130, 300)
-onimage2 = Tube(130, 270)
+onimage = Tube(130, 300, 240, 100)
+onimage2 = Tube(130, 250, 240, 100)
 item1 = item(800, 100, 100, 100)
-
-tube_list=[]
-for i in range(4): tube_list.append(Tube(200*i,400))
-tube_list.append(onimage)
-tube_list.append(onimage2)
-right=2
-
+tube1 = Tube(0, 400, 240, 100)
+tube2 = Tube(200, 400, 240, 100)
+tube3 = Tube(400, 400, 240, 100)
+tube4 = Tube(600, 400, 240, 100)
 score = float(0)
 itemvel = 2
+tube_word = [tube1.word, tube2.word, tube3.word, tube4.word]
+tube_list = [onimage, onimage2]
 
-def stacktube():
-    if len(tube_list)==4: new_player_tube = Tube(130, 300)
-    else: new_player_tube = Tube(130, tube_list[len(tube_list) - 1].y - 30)
-    tube_list.append(new_player_tube)
-    char1.y = char1.y - 30
 
-def itemeffect(num):
-    print(num)
-    if num==7:
-        for i in range(10): stacktube()
+def del_tube(temp1, temp2):
+    t = Tube(temp1, 400, 240, 100)
+    tube_word[temp2] = t.word
+    return t
+
 
 while True:
     for event in pygame.event.get():
@@ -117,17 +111,30 @@ while True:
                     if texty == item1.word:
                         itemvel += vel_plus
                         score += 1
-                        itemeffect(item1.itemnum)
                         item1 = item(800, 100, 100, 100)
                         chk = True
                     if not chk:
                         for j in range(4):
-                            if texty == tube_list[j].word:
+                            if texty == tube_word[j]:
                                 score += 1
-                                stacktube()
-                                tube_list[j] = Tube(tube_list[j].x, tube_list[j].y)
-                                break
-
+                                try:
+                                    new_player_tube = Tube(130, tube_list[len(tube_list)-1].y - 50, 250, 100)
+                                except IndexError:
+                                    pygame.quit()
+                                    sys.exit()
+                                char1.y = char1.y - 50
+                                tube_list.append(new_player_tube)
+                                if j == 0:
+                                    tube1 = del_tube(0, 0)
+                                    break
+                                elif j == 1:
+                                    tube2 = del_tube(200, 1)
+                                    break
+                                elif j == 2:
+                                    tube3 = del_tube(400, 2)
+                                    break
+                                else:
+                                    tube4 = del_tube(600, 3)
                     texty = ""
                     continue
                 elif buttons[0] == 'space':
@@ -143,28 +150,30 @@ while True:
             pygame.quit()
             sys.exit()
     if time.time() - start_time >= delta_t:
-        if len(tube_list)>4:
+        try:
             tube_list.pop()
-        else:
+        except IndexError:
             pygame.quit()
             sys.exit()
-        char1.y = char1.y + 30
+        char1.y = char1.y + 50
         start_time = time.time()
-    if len(tube_list) >= 20:
-        tube_list = [tube_list[0],tube_list[1],tube_list[2],tube_list[3],onimage, onimage2]
+    if len(tube_list) >= 6:
+        tube_list = [onimage, onimage2]
         delta_t -= 0.5
         char1.y = 200
         start_time = time.time()
     pygame.display.update()
     display.fill(White)
     printimage(wallpaper)
-
-    for tubes in tube_list: printimage(tubes)
-    for i in range(4):
-        printText(tube_list[i].word, color= "White", pos=(tube_list[i].x + 70, tube_list[i].y + 50))
+    for i in tube_list:
+        printimage(i)
     printimage(char1)
     printimage(item1)
-
+    printimage(tube1), printimage(tube2), printimage(tube3), printimage(tube4)
+    printText(tube1.word, color= "White", pos=(tube1.x + 70, tube1.y + 50))
+    printText(tube2.word, color= "White", pos=(tube2.x + 70, tube2.y + 50))
+    printText(tube3.word, color= "White", pos=(tube3.x + 70, tube3.y + 50))
+    printText(tube4.word, color= "White", pos=(tube4.x + 70, tube4.y + 50))
     printText(item1.word, pos=(item1.x + 20, item1.y + 100))
     printText('Please enter the word')
     printText(texty, "black", (0, 532))
