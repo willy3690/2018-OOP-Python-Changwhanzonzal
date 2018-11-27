@@ -31,23 +31,20 @@ pygame.display.set_caption("해상구조 SOS")
 texty = ""
 input_word = ""
 pressed_button = list()
-vel_plus = 0.05
-delta_t = 5
-start_time = time.time()
-
+vel_plus = 0.01
 
 class item:
-    def __init__(self, inputx, inputy, w, h):
+    def __init__(self):
         self.imagename = "pyproimage/image"+(str)(random.randrange(0,10)+1)+".png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
-        self.frog = pygame.transform.scale(self.frog, (w,h))
-        self.x = inputx
-        self.y = inputy
+        self.frog = pygame.transform.scale(self.frog, (100,100))
+        self.x = 800
+        self.y = random.randrange(0,100)
         self.word = random.choice(wordlist)
 
 
 class Tube:
-    def __init__(self, inputx, inputy, w, h):
+    def __init__(self, inputx, inputy, w=240, h=100):
         self.imagename="pyproimage/tubevector.png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
         self.frog = pygame.transform.scale(self.frog, (w, h))
@@ -68,24 +65,13 @@ class Otherimage:
 wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
 boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
 char1 = Otherimage(200, 200, 100, 100, "pyproimage/char2.png")
-onimage = Tube(130, 300, 240, 100)
-onimage2 = Tube(130, 250, 240, 100)
-item1 = item(800, 100, 100, 100)
-tube1 = Tube(0, 400, 240, 100)
-tube2 = Tube(200, 400, 240, 100)
-tube3 = Tube(400, 400, 240, 100)
-tube4 = Tube(600, 400, 240, 100)
+item1 = item()
+tubelist=[]
+for i in range(4): tubelist.append(Tube(200*i, 400))
+tubelist.append(Tube(130, 250))
 score = float(0)
-itemvel = 2
-tube_word = [tube1.word, tube2.word, tube3.word, tube4.word]
-tube_list = [onimage, onimage2]
-
-
-def del_tube(temp1, temp2):
-    t = Tube(temp1, 400, 240, 100)
-    tube_word[temp2] = t.word
-    return t
-
+itemvel = 1
+right=1
 
 while True:
     for event in pygame.event.get():
@@ -96,7 +82,7 @@ while True:
                 if len(buttons) >= 2:
                     if pressed_button.count(buttons[i]) >= 1:
                         continue
-                    elif buttons[-1] == 'left shift' or buttons[-1] == 'right shift':
+                    elif buttons[1] == 'left shift':
                         buttons[0] = buttons[0].upper()
                     else:
                         pressed_button.extend(buttons[i])
@@ -111,79 +97,61 @@ while True:
                     if texty == item1.word:
                         itemvel += vel_plus
                         score += 1
-                        item1 = item(800, 100, 100, 100)
+                        item1 = item()
                         chk = True
                     if not chk:
                         for j in range(4):
-                            if texty == tube_word[j]:
+                            if texty == tubelist[j].word:
                                 score += 1
-                                try:
-                                    new_player_tube = Tube(130, tube_list[len(tube_list)-1].y - 50, 250, 100)
-                                except IndexError:
-                                    pygame.quit()
-                                    sys.exit()
-                                char1.y = char1.y - 50
-                                tube_list.append(new_player_tube)
-                                if j == 0:
-                                    tube1 = del_tube(0, 0)
-                                    break
-                                elif j == 1:
-                                    tube2 = del_tube(200, 1)
-                                    break
-                                elif j == 2:
-                                    tube3 = del_tube(400, 2)
-                                    break
-                                else:
-                                    tube4 = del_tube(600, 3)
+                                tubelist[j] = Tube(tubelist[j].x, tubelist[j].y)
+                                char1.y-=40
+                                tubelist.append(Tube(tubelist[4].x,tubelist[4].y-40*right))
+                                right+=1
+                                break
                     texty = ""
                     continue
                 elif buttons[0] == 'space':
                     texty += ' '
                     continue
-                elif len(buttons[i]) > 1:
-                    continue
-                else:
-                    texty = texty + buttons[i]
-        elif event.type == pygame.KEYUP:  # If user press any key.
-            continue
+                elif len(buttons[i]) > 1: continue
+                else: texty = texty + buttons[i]
+
+        elif event.type == pygame.KEYUP: continue
+
         elif event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    if time.time() - start_time >= delta_t:
-        try:
-            tube_list.pop()
-        except IndexError:
-            pygame.quit()
-            sys.exit()
-        char1.y = char1.y + 50
-        start_time = time.time()
-    if len(tube_list) >= 6:
-        tube_list = [onimage, onimage2]
-        delta_t -= 0.5
-        char1.y = 200
-        start_time = time.time()
+
     pygame.display.update()
     display.fill(White)
     printimage(wallpaper)
-    for i in tube_list:
-        printimage(i)
-    printimage(char1)
-    printimage(item1)
-    printimage(tube1), printimage(tube2), printimage(tube3), printimage(tube4)
-    printText(tube1.word, color= "White", pos=(tube1.x + 70, tube1.y + 50))
-    printText(tube2.word, color= "White", pos=(tube2.x + 70, tube2.y + 50))
-    printText(tube3.word, color= "White", pos=(tube3.x + 70, tube3.y + 50))
-    printText(tube4.word, color= "White", pos=(tube4.x + 70, tube4.y + 50))
+    for tubes in tubelist:
+        printimage(tubes)
+    for i in range(4):
+        printText(tubelist[i].word, color="White", pos=(tubelist[i].x + 70, tubelist[i].y + 50))
+
     printText(item1.word, pos=(item1.x + 20, item1.y + 100))
     printText('Please enter the word')
     printText(texty, "black", (0, 532))
     printText('Score: ' + str(round(score, 1)), "black", (0, 0))
+
+    printimage(char1)
+    move = [1.7, -1.7, 0]
+    ymove = move[random.randrange(0, 3)]
+    xmove = move[random.randrange(0, 3)]
+    moverand=random.randrange(0,2)
+    if moverand==0:
+        if 210 > char1.x + xmove > 190: char1.x += xmove
+    else:
+        if 210 > char1.y + ymove > 190: char1.y += ymove
+
+    printimage(item1)
     if item1.x > -100:
         item1.x -= itemvel
         if item1.x < -96:
             printimage(boom)
             if item1.x < -98 and score > 0: score -= 0.1
-        if item1.x < -98: item1 = item(800, 100, 100, 100)
+        if item1.x < -98: item1 = item()
 
 #  https://blog.naver.com/rsj0908/221007425974  에서 가져옴
 # https://pixlr.com/editor/ 에서 이미지 수정
