@@ -72,7 +72,7 @@ onimage = Tube(130, 300, 240, 100)
 onimage2 = Tube(130, 270, 240, 100)
 item1 = item(800, 100, 100, 100)
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
-pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/boom.png")
+pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/test_rule.png")
 play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
 tube_list=[]
 for i in range(4): tube_list.append(Tube(200*i,400,240,100))
