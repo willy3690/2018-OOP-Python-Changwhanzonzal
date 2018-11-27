@@ -80,12 +80,16 @@ char1 = Charac()
 onimage = Tube(130, 300)
 onimage2 = Tube(130, 270)
 item1 = item(800, 100, 100, 100)
+pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
+pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/test_rule.png")
+play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
 
 tube_list=[]
 for i in range(4): tube_list.append(Tube(200*i,400))
 tube_list.append(onimage)
 tube_list.append(onimage2)
 right=2
+flag=False
 
 score = float(0)
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
@@ -100,7 +104,8 @@ def stacktube():
 def itemeffect(num):
     global char1
     print(num)
-    if num==7: for i in range(10): stacktube()
+    if num==7:
+        for i in range(10): stacktube()
     if num==2: char1=Charac(char1.x,char1.y)
 
 while True:
@@ -148,12 +153,23 @@ while True:
                     texty = texty + buttons[i]
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if event.pos[0] >= 750 and event.pos[1] <= 50:
-                pass
+                if flag:
+                    flag = False
+                else:
+                    flag = True
+                print("1")
         elif event.type == pygame.KEYUP:  # If user press any key.
             continue
         elif event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+    if flag:
+        pygame.display.update()
+        display.fill(White)
+        printimage(pause_im1)
+        printimage(play_image)
+        start_time = 2 * time.time() - start_time
+        continue
     if time.time() - start_time >= delta_t:
         if len(tube_list)>4:
             tube_list.pop()
