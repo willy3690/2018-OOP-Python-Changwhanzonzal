@@ -35,8 +35,8 @@ pressed_button = list()
 vel_plus = 0.05
 
 # 나와 컴퓨터의 튜브가 빠지는 시간간격
-delta_t_allpop = 10
-start_time_allpop = time.time()
+delta_t_pop = [10,10]
+start_time_pop = [time.time(),time.time()]
 
 # 컴퓨터가 튜브를 먹는 시간간격
 delta_t_entube = 2
@@ -257,22 +257,28 @@ while True:
         stacktube(1)
         start_time_entube=time.time()
 
-    if time.time() - start_time_allpop >= delta_t_allpop:
+    if time.time() - start_time_pop[0] >= delta_t_pop[0]:
         poptube(0)
+        start_time_pop[0] = time.time()
+
+    if time.time() - start_time_pop[1] >= delta_t_pop[1]:
         poptube(1)
-        start_time_allpop = time.time()
+        start_time_pop[1] = time.time()
 
     for i in range(2):
         if len(tube_upper_list[i]) >= 7:
             tube_upper_list[i] = [tube_upper_list[i][0],tube_upper_list[i][1]]
-            delta_t_allpop -= 0.5
+            delta_t_pop[i] -= 0.5
             charlist[i].y = 200
-            #지금 이 문장 때문에 아무것도 안 하고 있으면 어떻게 되는지 보라.
-            start_time_allpop = time.time()
+            # 지금 이 문장 때문에 아무것도 안 하고 있으면 어떻게 되는지 보라.
+            start_time_pop[i] = time.time()
 
     pygame.display.update()
     display.fill(White)
     printimage(wallpaper)
+
+    for i in range(2):
+        printText('pop:'+(str)((int)(10-(time.time()-start_time_pop[i]))), color="Black", pos=(charlist[i].x+27, charlist[i].y-20))
 
     for tubes in tube_under_list: printimage(tubes)
     for i in range(4):
