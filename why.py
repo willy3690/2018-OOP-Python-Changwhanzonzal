@@ -103,10 +103,13 @@ def stacktube():
 
 def itemeffect(num):
     global char1
+    global item1
+    item1 = item(800, 100, 100, 100)
     print(num)
     if num==7:
         for i in range(10): stacktube()
     if num==2: char1=Charac(char1.x,char1.y)
+
 
 while True:
     for event in pygame.event.get():
@@ -118,7 +121,8 @@ while True:
                     if pressed_button.count(buttons[i]) >= 1:
                         continue
                     elif buttons[-1] == 'left shift' or buttons[-1] == 'right shift':
-                        buttons[0] = buttons[0].upper()
+                        for j in range(len(buttons)): buttons[j] = buttons[j].upper()
+                        print(buttons)
                     else:
                         pressed_button.extend(buttons[i])
                 else:
@@ -132,7 +136,6 @@ while True:
                     if texty == item1.word:
                         itemvel += vel_plus
                         score += 1
-                        item1 = item(800, 100, 100, 100)
                         itemeffect(item1.itemnum)
                         chk = True
                     if not chk:
@@ -144,7 +147,7 @@ while True:
                                 break
                     texty = ""
                     continue
-                elif buttons[0] == 'space':
+                elif buttons[0] == 'space' or buttons[0]=='SPACE':
                     texty += ' '
                     continue
                 elif len(buttons[i]) > 1:
