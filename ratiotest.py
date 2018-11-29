@@ -103,17 +103,16 @@ charlist=[char1,char2]
 tube_under_list=[]
 for i in range(4): tube_under_list.append(Tube(200*i,400))
 
-# 나와 컴퓨터의 튜브 리스트이다.
-# tube_upper_list[0] 리스트에는 내 튜브 인스턴스가,
-# tube_upper_list[1] 리스트에는 상대 튜브 인스턴스가 들어있다.
-tube_upper_list=[[], []]
+#나와 컴퓨터의 튜브 리스트이다.
+#tube_upper_list[0] 리스트에는 내 튜브 인스턴스가,
+#tube_upper_list[1] 리스트에는 상대 튜브 인스턴스가 들어있다.
+tube_upper_list=[[],[]]
 
 flag=False
 
 score = float(0)
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 itemvel = 2
-
 
 # more이 0(tube_upper_list의 index!)이면 내 쪽에, 1이면 상대쪽에 튜브를 쌓는 함수
 def stacktube(more):
@@ -124,15 +123,6 @@ def stacktube(more):
     charlist[more].y -=30
 
 
-def poptube(more):
-    if len(tube_upper_list[more]) > 0:
-        tube_upper_list[more].pop()
-        charlist[more].y += 30
-    else:
-        pygame.quit()
-        sys.exit()
-
-
 # 나와 상대 쪽에 튜브를 두 개씩 쌓는다.
 for i in range(2):
     stacktube(0)
@@ -141,12 +131,9 @@ for i in range(2):
 
 # 아이템의 번호num=(item1.itemnum)와 0 또는 1의 more를 입력받는다.
 # more가 0이면 내가 num에 해당하는 아이템을, 1이면 상대가 먹은 것.
-def itemeffect(num,more):
+def itemeffect(num=1, more=1):
     global item1
-    item1=item(800,100,100,100)
-    if num==1:
-        for i in range(2):
-            stacktube(more)
+    item1 = item(800, 100, 100, 100)
 
 
 while True:
@@ -227,8 +214,13 @@ while True:
         start_time_entube=time.time()
 
     if time.time() - start_time_allpop >= delta_t_allpop:
-        poptube(0)
-        poptube(1)
+        for i in range(2):
+            if len(tube_upper_list[i])>0:
+                tube_upper_list[i].pop()
+                charlist[i].y += 30
+            else:
+                pygame.quit()
+                sys.exit()
         start_time_allpop = time.time()
 
     for i in range(2):
@@ -236,7 +228,6 @@ while True:
             tube_upper_list[i] = [tube_upper_list[i][0],tube_upper_list[i][1]]
             delta_t_allpop -= 0.5
             charlist[i].y = 200
-            #지금 이 문장 때문에 아무것도 안 하고 있으면 어떻게 되는지 보라.
             start_time_allpop = time.time()
 
     pygame.display.update()
