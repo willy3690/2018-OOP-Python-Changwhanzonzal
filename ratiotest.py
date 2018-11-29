@@ -49,7 +49,7 @@ start_time_enitem = time.time()
 
 class item:
     def __init__(self, inputx, inputy, w, h):
-        self.itemnum=random.randrange(0,10)+1
+        self.itemnum=random.randrange(0,7)+1
         self.imagename = "pyproimage/image"+(str)(self.itemnum)+".png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
         self.frog = pygame.transform.scale(self.frog, (w,h))
@@ -143,10 +143,25 @@ for i in range(2):
 # more가 0이면 내가 num에 해당하는 아이템을, 1이면 상대가 먹은 것.
 def itemeffect(num,more):
     global item1
+    global tube_under_list
+    global tube_upper_list
+    global charlist
+
     item1=item(800,100,100,100)
-    if num==1:
-        for i in range(2):
-            stacktube(more)
+    if num == 1:
+        charlist[more]=Charac(charlist[more].x,charlist[more].y)
+    if num == 2:
+        pass
+    if num == 3:
+        for i in range(len(tube_upper_list[more])): poptube(more)
+    if num == 4:
+        pass
+    if num == 5:
+        pass
+    if num == 6:
+        for i in range(3): stacktube(more)
+    if num == 7:
+        pass
 
 
 while True:
