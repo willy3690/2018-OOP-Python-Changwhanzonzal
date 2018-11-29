@@ -1,0 +1,235 @@
+import pygame, sys
+import random
+import threading
+import time
+
+fp = open('pyprowords.txt', 'r')
+wordlist = []
+for line in fp:
+    wordlist.append(line.strip())
+
+def printimage(image):
+    display.blit(image.frog,(image.x, image.y))
+
+
+def printText(msg, color='BLACK', pos = (0, 512)):
+    textSurface = font.render(msg, True, pygame.Color(color), None)
+    textRect = textSurface.get_rect()
+    textRect.topleft = pos
+    display.blit(textSurface,textRect)
+
+
+White = (255,255,255)
+wid = 800
+hei = 512 + 50
+
+pygame.init()
+font = pygame.font.SysFont("consolas", 20)
+display = pygame.display.set_mode((wid, hei))
+display.fill(White)
+pygame.display.set_caption("해상구조 SOS")
+texty = ""
+input_word = ""
+pressed_button = list()
+vel_plus = 0.05
+delta_t = 5
+start_time = time.time()
+
+
+class item:
+    def __init__(self, inputx, inputy, w, h):
+        self.itemnum=random.randrange(0,10)+1
+        self.imagename = "pyproimage/image"+(str)(self.itemnum)+".png"
+        self.frog = pygame.image.load(self.imagename) # 사진파일
+        self.frog = pygame.transform.scale(self.frog, (w,h))
+        self.x = inputx
+        self.y = inputy
+        self.word = random.choice(wordlist)
+
+
+class Tube:
+    def __init__(self, inputx, inputy, w=240, h=100):
+        self.imagename="pyproimage/tubevector.png"
+        self.frog = pygame.image.load(self.imagename) # 사진파일
+        self.frog = pygame.transform.scale(self.frog, (w, h))
+        self.x = inputx
+        self.y = inputy
+        self.word = random.choice(wordlist)
+
+class Charac:
+    def __init__(self,inputx=200, inputy=200, w=100, h=100):
+        self.charnum = random.randrange(1, 3) + 1
+        self.imagename = "pyproimage/char" + (str)(self.charnum) + ".png"
+        self.frog = pygame.image.load(self.imagename)  # 사진파일
+        self.frog = pygame.transform.scale(self.frog, (w, h))
+        self.x = inputx
+        self.y = inputy
+
+class Otherimage:
+    def __init__(self, inputx, inputy, w, h, imaname):
+        self.imagename=imaname
+        self.frog = pygame.image.load(self.imagename)  # 사진파일
+        self.frog = pygame.transform.scale(self.frog, (w, h))
+        self.x = inputx
+        self.y = inputy
+
+
+wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
+boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
+
+item1 = item(800, 100, 100, 100)
+
+pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
+pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/test_rule.png")
+play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
+
+char1 = Charac(200,270)
+char2 = Charac(570,270)
+charlist=[char1,char2]
+
+#단어가 적혀있는 튜브들의 리스트
+tube_under_list=[]
+for i in range(4): tube_under_list.append(Tube(200*i,400))
+
+#나와 컴퓨터의 튜브 리스트
+tube_upper_list=[[],[]]
+
+flag=False
+
+score = float(0)
+pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
+itemvel = 2
+
+def stacktube(more):
+    xlist=[130,500]
+    if len(tube_upper_list[more])==0: new_player_tube = Tube(xlist[more], 300)
+    else: new_player_tube = Tube(xlist[more], tube_upper_list[more][len(tube_upper_list[more]) - 1].y - 30)
+    tube_upper_list[more].append(new_player_tube)
+    charlist[more].y -=30
+
+for i in range(2):
+    stacktube(0)
+    stacktube(1)
+'''   
+def itemeffect(num,more):
+    global char1
+    global item1
+    item1 = item(800, 100, 100, 100)
+    print(num)
+    if num==7:
+        for i in range(10): stacktube()
+    if num==2: char1=Charac(char1.x,char1.y)
+'''
+def itemeffect(num=1,more=1):
+    global item1
+    item1=item(800,100,100,100)
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            pressed = pygame.key.get_pressed()
+            buttons = ([pygame.key.name(k) for k, v in enumerate(pressed) if v])
+            for i in range(len(buttons)):
+                if len(buttons) >= 2:
+                    if pressed_button.count(buttons[i]) >= 1:
+                        continue
+                    elif buttons[-1] == 'left shift' or buttons[-1] == 'right shift':
+                        for j in range(len(buttons)): buttons[j] = buttons[j].upper()
+                        print(buttons)
+                    else:
+                        pressed_button.extend(buttons[i])
+                else:
+                    pressed_button = buttons
+                if buttons[i] == 'backspace':
+                    if len(texty) >= 1:
+                        texty = texty[0:len(texty) - 1]
+                    continue
+                elif buttons[i] == 'return':
+                    chk = False
+                    if texty == item1.word:
+                        itemvel += vel_plus
+                        score += 1
+                        itemeffect(item1.itemnum,0)
+                        chk = True
+                    if not chk:
+                        for j in range(4):
+                            if texty == tube_under_list[j].word:
+                                score += 1
+                                stacktube(0)
+                                tube_under_list[j] = Tube(tube_under_list[j].x, tube_under_list[j].y)
+                                break
+                    texty = ""
+                    continue
+                elif buttons[0] == 'space' or buttons[0]=='SPACE':
+                    texty += ' '
+                    continue
+                elif len(buttons[i]) > 1:
+                    continue
+                else:
+                    texty = texty + buttons[i]
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if event.pos[0] >= 750 and event.pos[1] <= 50:
+                if flag:
+                    flag = False
+                else:
+                    flag = True
+                print("1")
+        elif event.type == pygame.KEYUP:  # If user press any key.
+            continue
+        elif event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    if flag:
+        pygame.display.update()
+        display.fill(White)
+        printimage(pause_im1)
+        printimage(play_image)
+        start_time = 2 * time.time() - start_time
+        continue
+    if time.time() - start_time >= delta_t:
+        if len(tube_upper_list[0])>0:
+            tube_upper_list[0].pop()
+            charlist[0].y += 30
+            #컴퓨터의 행위. 이후 다른 시간 간격 if문을 따로 만들면 좋겠다.
+            stacktube(1)
+            itemeffect(item1.itemnum,1)
+        else:
+            pygame.quit()
+            sys.exit()
+        start_time = time.time()
+    if len(tube_upper_list[0]) >= 7:
+        tube_upper_list[0] = [tube_upper_list[0][0],tube_upper_list[0][1]]
+        delta_t -= 0.5
+        charlist[0].y = 200
+        start_time = time.time()
+    pygame.display.update()
+    display.fill(White)
+    printimage(wallpaper)
+
+    for tubes in tube_under_list: printimage(tubes)
+    for i in range(4):
+        printText(tube_under_list[i].word, color= "White", pos=(tube_under_list[i].x + 70, tube_under_list[i].y + 50))
+
+    for tubes in tube_upper_list[0]: printimage(tubes)
+    for tubes in tube_upper_list[1]: printimage(tubes)
+
+    for chars in charlist: printimage(chars)
+
+    printimage(pause_image)
+
+    printimage(item1)
+    printText(item1.word, pos=(item1.x + 20, item1.y + 100))
+
+    printText('Please enter the word')
+    printText(texty, "black", (0, 532))
+    printText('Score: ' + str(round(score, 1)), "black", (0, 0))
+
+    if item1.x > -100:
+        item1.x -= itemvel
+        if item1.x < -96:
+            printimage(boom)
+            if item1.x < -98 and score > 0: score -= 0.1
+        if item1.x < -98: item1 = item(800, 100, 100, 100)
+
+#  https://blog.naver.com/rsj0908/221007425974  에서 가져옴
+# https://pixlr.com/editor/ 에서 이미지 수정
