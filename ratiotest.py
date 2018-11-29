@@ -1,12 +1,13 @@
 import pygame, sys
 import random
-import threading
 import time
+import math
 
 fp = open('pyprowords.txt', 'r')
 wordlist = []
 for line in fp:
     wordlist.append(line.strip())
+
 
 def printimage(image):
     display.blit(image.frog,(image.x, image.y))
@@ -33,16 +34,16 @@ input_word = ""
 pressed_button = list()
 vel_plus = 0.05
 
-#나와 컴퓨터의 튜브가 빠지는 시간간격
-delta_t_allpop = 5
+# 나와 컴퓨터의 튜브가 빠지는 시간간격
+delta_t_allpop = 10
 start_time_allpop = time.time()
 
-#컴퓨터가 튜브를 먹는 시간간격
+# 컴퓨터가 튜브를 먹는 시간간격
 delta_t_entube = 2
 start_time_entube = time.time()
 
-#컴퓨터가 아이템을 먹는 시간간격
-#이후 random으로 이번 아이템을 먹을지 안먹을지, 또는 어디서 먹을지 정하게 하면 좋겠다.
+# 컴퓨터가 아이템을 먹는 시간간격
+# 이후 random으로 이번 아이템을 먹을지 안먹을지, 또는 어디서 먹을지 정하게 하면 좋겠다.
 delta_t_enitem = 3
 start_time_enitem = time.time()
 
@@ -67,6 +68,7 @@ class Tube:
         self.y = inputy
         self.word = random.choice(wordlist)
 
+
 class Charac:
     def __init__(self,inputx, inputy, w=100, h=100):
         self.charnum = random.randrange(1, 3) + 1
@@ -75,6 +77,7 @@ class Charac:
         self.frog = pygame.transform.scale(self.frog, (w, h))
         self.x = inputx
         self.y = inputy
+
 
 class Otherimage:
     def __init__(self, inputx, inputy, w, h, imaname):
@@ -94,12 +97,12 @@ pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/test_rule.png")
 play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
 
-#char1,2는 각각 나와 컴퓨터의 캐릭터이며, x와 y좌표를 인자로 받는다.
+# char1,2는 각각 나와 컴퓨터의 캐릭터이며, x와 y좌표를 인자로 받는다.
 char1 = Charac(200,270)
 char2 = Charac(570,270)
 charlist=[char1,char2]
 
-#단어가 적혀있는 튜브들의 리스트
+# 단어가 적혀있는 튜브들의 리스트
 tube_under_list=[]
 for i in range(4): tube_under_list.append(Tube(200*i,400))
 
@@ -113,6 +116,19 @@ flag=False
 score = float(0)
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 itemvel = 2
+sinx=[0,0.8]
+
+
+def shiver():
+    global tube_upper_list
+    global sinx
+    for i in range(2):
+        for tubes in tube_upper_list[i]:
+            tubes.y+=0.5*math.sin(sinx[i])
+            tubes.x+=0.2*math.sin(sinx[i]*2)
+        charlist[i].y+=0.5*math.sin(sinx[i])
+        charlist[i].x+=0.2*math.sin(sinx[i]*2)
+    for i in range(2): sinx[i]+=0.04
 
 
 # more이 0(tube_upper_list의 index!)이면 내 쪽에, 1이면 상대쪽에 튜브를 쌓는 함수
@@ -147,9 +163,9 @@ def itemeffect(num,more):
     global tube_upper_list
     global charlist
 
-    item1=item(800,100,100,100)
+    item1=item(800, 100, 100, 100)
     if num == 1:
-        charlist[more]=Charac(charlist[more].x,charlist[more].y)
+        charlist[more]=Charac(charlist[more].x, charlist[more].y)
     if num == 2:
         pass
     if num == 3:
@@ -262,9 +278,13 @@ while True:
     for i in range(4):
         printText(tube_under_list[i].word, color= "White", pos=(tube_under_list[i].x + 70, tube_under_list[i].y + 50))
 
-    #나와 상대의 튜브 출력
-    for tubes in tube_upper_list[0]: printimage(tubes)
-    for tubes in tube_upper_list[1]: printimage(tubes)
+    shiver()
+
+    # 나와 상대의 튜브 출력
+    for tubes in tube_upper_list[0]:
+        printimage(tubes)
+    for tubes in tube_upper_list[1]:
+        printimage(tubes)
 
     for chars in charlist: printimage(chars)
 
