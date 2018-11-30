@@ -13,8 +13,8 @@ def printimage(image):
     display.blit(image.frog,(image.x, image.y))
 
 
-def printText(msg, color='BLACK', pos = (0, 512)):
-    textSurface = font.render(msg, True, pygame.Color(color), None)
+def printText(msg, color='BLACK', pos = (0, 512),infon=0):
+    textSurface = font[infon].render(msg, True, pygame.Color(color), None)
     textRect = textSurface.get_rect()
     textRect.topleft = pos
     display.blit(textSurface,textRect)
@@ -25,7 +25,9 @@ wid = 800
 hei = 512 + 50
 
 pygame.init()
-font = pygame.font.SysFont("consolas", 20)
+font = [pygame.font.SysFont("consolas", 20),
+        pygame.font.SysFont("consolas", 18),
+        pygame.font.SysFont("consolas", 16)]
 display = pygame.display.set_mode((wid, hei))
 display.fill(White)
 pygame.display.set_caption("해상구조 SOS")
@@ -49,7 +51,7 @@ start_time_enitem = time.time()
 
 
 class item:
-    def __init__(self, inputx, inputy, w, h):
+    def __init__(self, inputx, inputy, w=80, h=80):
         self.itemnum=random.randrange(0,7)+1
         self.imagename = "pyproimage/image"+(str)(self.itemnum)+".png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
@@ -91,7 +93,7 @@ class Otherimage:
 wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
 boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
 
-item1 = item(800, 100, 100, 100)
+item1 = item(800, 100)
 
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/test_rule.png")
@@ -128,6 +130,9 @@ def shiver():
             tubes.x+=0.2*math.sin(sinx[i]*2)
         charlist[i].y+=0.5*math.sin(sinx[i])
         charlist[i].x+=0.2*math.sin(sinx[i]*2)
+    item1.y+=0.3*math.sin(sinx[i])
+    for tubes in tube_under_list:
+        tubes.y+=0.15 * math.sin(sinx[i])
     for i in range(2): sinx[i]+=0.04
 
 
@@ -163,13 +168,14 @@ def itemeffect(num,more):
     global tube_upper_list
     global charlist
 
-    item1=item(800, 100, 100, 100)
+    item1=item(800, 100)
     if num == 1:
         charlist[more]=Charac(charlist[more].x, charlist[more].y)
     if num == 2:
         pass
     if num == 3:
         for i in range(len(tube_upper_list[more])): poptube(more)
+        start_time_pop[more]=time.time()
     if num == 4:
         pass
     if num == 5:
@@ -240,7 +246,7 @@ while True:
         display.fill(White)
         printimage(pause_im1)
         printimage(play_image)
-        start_time_allpop = 2 * time.time() - start_time_allpop
+        for i in range(2): start_time_pop[i] = 2 * time.time() - start_time_pop[i]
         start_time_entube = 2 * time.time() - start_time_entube
         start_time_enitem = 2 * time.time() - start_time_enitem
         continue
@@ -270,7 +276,6 @@ while True:
             tube_upper_list[i] = [tube_upper_list[i][0],tube_upper_list[i][1]]
             delta_t_pop[i] -= 0.5
             charlist[i].y = 200
-            # 지금 이 문장 때문에 아무것도 안 하고 있으면 어떻게 되는지 보라.
             start_time_pop[i] = time.time()
 
     pygame.display.update()
@@ -278,7 +283,7 @@ while True:
     printimage(wallpaper)
 
     for i in range(2):
-        printText('pop:'+(str)((int)(10-(time.time()-start_time_pop[i]))), color="Black", pos=(charlist[i].x+27, charlist[i].y-20))
+        printText('pop:'+(str)((int)(10-(time.time()-start_time_pop[i]))), "Black", (charlist[i].x+27, charlist[i].y-20), 2)
 
     for tubes in tube_under_list: printimage(tubes)
     for i in range(4):
@@ -308,7 +313,7 @@ while True:
         if item1.x < -96:
             printimage(boom)
             if item1.x < -98 and score > 0: score -= 0.1
-        if item1.x < -98: item1 = item(800, 100, 100, 100)
+        if item1.x < -98: item1 = item(800, 100)
 
 #  https://blog.naver.com/rsj0908/221007425974  에서 가져옴
 # https://pixlr.com/editor/ 에서 이미지 수정
