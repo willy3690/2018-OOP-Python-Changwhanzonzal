@@ -168,11 +168,11 @@ def itemeffect(num,more):
     global tube_upper_list
     global charlist
 
-    item1=item(800, 100)
+    item1 = item(800, 100)
     if num == 1:
-        charlist[more]=Charac(charlist[more].x, charlist[more].y)
+        charlist[more] = Charac(charlist[more].x, charlist[more].y)
     if num == 2:
-        pass
+        start_time_pop[more] += 3
     if num == 3:
         for i in range(len(tube_upper_list[more])): poptube(more)
         start_time_pop[more]=time.time()
