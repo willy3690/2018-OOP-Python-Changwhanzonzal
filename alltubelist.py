@@ -24,7 +24,8 @@ hei = 512 + 50
 font = [pygame.font.SysFont("consolas", 20),
         pygame.font.SysFont("consolas", 18),
         pygame.font.SysFont("consolas", 16),
-        pygame.font.SysFont("consolas", 30)]
+        pygame.font.SysFont("consolas", 30),
+        pygame.font.SysFont("나눔고딕", 50)]
 display = pygame.display.set_mode((wid, hei))
 display.fill(White)
 pygame.display.set_caption("해상구조 SOS")
@@ -137,6 +138,8 @@ pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 itemvel = 2
 sinx=[0,0.8]
 rep = False
+is_start = True
+
 
 def shiver():
     global tube_upper_list
@@ -205,6 +208,22 @@ def itemeffect(num,more):
         pass
 
 
+while True:
+    pygame.display.update()
+    display.fill(White)
+    printText("해상구조대 SOS", pos=(wid/2-180, hei / 2 - 120), infon=4)
+    printimage(Otherimage(wid/2-100, hei/2-10, 200, 200, "pyproimage/Play.png"))
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if is_start and wid / 2 - 100 <= event.pos[0] < wid / 2 + 100 and hei / 2 - 10 <= event.pos[1] <= hei / 2 + 190:
+                is_start = False
+                time.sleep(0.5)
+        elif event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    if not is_start:
+        break
+    time.sleep(0.1)
 while True:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
