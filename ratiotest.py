@@ -195,11 +195,9 @@ while True:
                 if len(buttons) >= 2:
                     if pressed_button.count(buttons[i]) >= 1:
                         continue
-                    elif buttons[-1] == 'left shift' or buttons[-1] == 'right shift':
-                        for j in range(len(buttons)): buttons[j] = buttons[j].upper()
-                        print(buttons)
-                    else:
-                        pressed_button.extend(buttons[i])
+                    pressed_button.append(buttons[i])
+                    if buttons.count('left shift') >= 1 or buttons.count('right shift') >= 1 and len(buttons[i]) == 1:
+                        buttons[i] = buttons[i].upper()
                 else:
                     pressed_button = buttons
                 if buttons[i] == 'backspace':
@@ -222,7 +220,7 @@ while True:
                                 break
                     texty = ""
                     continue
-                elif buttons[0] == 'space' or buttons[0]=='SPACE':
+                elif buttons[0] == 'space':
                     texty += ' '
                     continue
                 elif len(buttons[i]) > 1:

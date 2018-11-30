@@ -145,12 +145,9 @@ while True:
                 if len(buttons) >= 2:
                     if pressed_button.count(buttons[i]) >= 1:
                         continue
-                    if buttons.count('left shift') >= 1 or buttons.count('right shift') >= 1:  # 수정
-                        if len(buttons[i]) == 1 and not pressed_button.count(buttons[i]):
-                            pressed_button.append(buttons[i])
-                            buttons[i] = buttons[i].upper()
-                        else:
-                            continue  # 여기까지 수정됨
+                    pressed_button.append(buttons[i])
+                    if buttons.count('left shift') >= 1 or buttons.count('right shift') >= 1 and len(buttons[i]) == 1:
+                        buttons[i] = buttons[i].upper()
                 else:
                     pressed_button = buttons
                 if buttons[i] == 'backspace':
