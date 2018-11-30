@@ -1,12 +1,13 @@
 import pygame, sys
 import random
-import threading
 import time
+import math
 
 fp = open('pyprowords.txt', 'r')
 wordlist = []
 for line in fp:
     wordlist.append(line.strip())
+
 
 def printimage(image):
     display.blit(image.frog,(image.x, image.y))
@@ -33,19 +34,16 @@ input_word = ""
 pressed_button = list()
 vel_plus = 0.05
 
+# 나와 컴퓨터의 튜브가 빠지는 시간간격
+delta_t_pop = [10,10]
+start_time_pop = [time.time(),time.time()]
 
-#나와 컴퓨터의 튜브가 빠지는 시간간격
-delta_t_allpop = 5
-start_time_allpop = time.time()
-
-
-#컴퓨터가 튜브를 먹는 시간간격
+# 컴퓨터가 튜브를 먹는 시간간격
 delta_t_entube = 2
 start_time_entube = time.time()
 
-
-#컴퓨터가 아이템을 먹는 시간간격
-#이후 random으로 이번 아이템을 먹을지 안먹을지, 또는 어디서 먹을지 정하게 하면 좋겠다.
+# 컴퓨터가 아이템을 먹는 시간간격
+# 이후 random으로 이번 아이템을 먹을지 안먹을지, 또는 어디서 먹을지 정하게 하면 좋겠다.
 delta_t_enitem = 3
 start_time_enitem = time.time()
 
@@ -92,16 +90,19 @@ class Otherimage:
 
 wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
 boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
+
 item1 = item(800, 100, 100, 100)
+
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/test_rule.png")
 play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
-# char1,2는 각각 나와 컴퓨터의 캐릭터이며, x와 y좌표를 인자로 받는다.
-char1 = Charac(200, 270)
-char2 = Charac(570, 270)
-charlist = [char1,char2]
 
-#단어가 적혀있는 튜브들의 리스트
+# char1,2는 각각 나와 컴퓨터의 캐릭터이며, x와 y좌표를 인자로 받는다.
+char1 = Charac(200,270)
+char2 = Charac(570,270)
+charlist=[char1,char2]
+
+# 단어가 적혀있는 튜브들의 리스트
 tube_under_list=[]
 for i in range(4): tube_under_list.append(Tube(200*i,400))
 
@@ -115,6 +116,19 @@ flag=False
 score = float(0)
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 itemvel = 2
+sinx=[0,0.8]
+
+
+def shiver():
+    global tube_upper_list
+    global sinx
+    for i in range(2):
+        for tubes in tube_upper_list[i]:
+            tubes.y+=0.5*math.sin(sinx[i])
+            tubes.x+=0.2*math.sin(sinx[i]*2)
+        charlist[i].y+=0.5*math.sin(sinx[i])
+        charlist[i].x+=0.2*math.sin(sinx[i]*2)
+    for i in range(2): sinx[i]+=0.04
 
 
 # more이 0(tube_upper_list의 index!)이면 내 쪽에, 1이면 상대쪽에 튜브를 쌓는 함수
@@ -149,9 +163,9 @@ def itemeffect(num,more):
     global tube_upper_list
     global charlist
 
-    item1=item(800,100,100,100)
+    item1=item(800, 100, 100, 100)
     if num == 1:
-        charlist[more] = Charac(charlist[more].x,charlist[more].y)
+        charlist[more]=Charac(charlist[more].x, charlist[more].y)
     if num == 2:
         pass
     if num == 3:
@@ -171,23 +185,22 @@ while True:
         if event.type == pygame.KEYDOWN:
             pressed = pygame.key.get_pressed()
             buttons = ([pygame.key.name(k) for k, v in enumerate(pressed) if v])
-            print(pressed_button)
-            print(buttons)
             for i in range(len(buttons)):
                 if len(buttons) >= 2:
                     if pressed_button.count(buttons[i]) >= 1:
                         continue
-                    if len(buttons[i]) == 1:
-                        pressed_button.append(buttons[i])
-                    if buttons.count('left shift') >= 1 or buttons.count('right shift') >= 1 and len(buttons[i]) == 1:
-                        buttons[i] = buttons[i].upper()
+                    elif buttons[-1] == 'left shift' or buttons[-1] == 'right shift':
+                        for j in range(len(buttons)): buttons[j] = buttons[j].upper()
+                        print(buttons)
+                    else:
+                        pressed_button.extend(buttons[i])
                 else:
                     pressed_button = buttons
                 if buttons[i] == 'backspace':
                     if len(texty) >= 1:
                         texty = texty[0:len(texty) - 1]
                     continue
-                if buttons[i] == 'return':
+                elif buttons[i] == 'return':
                     chk = False
                     if texty == item1.word:
                         itemvel += vel_plus
@@ -203,18 +216,20 @@ while True:
                                 break
                     texty = ""
                     continue
-                if buttons[i] == 'space':
+                elif buttons[0] == 'space' or buttons[0]=='SPACE':
                     texty += ' '
                     continue
-                if len(buttons[i]) > 1:
+                elif len(buttons[i]) > 1:
                     continue
-                texty = texty + buttons[i]
+                else:
+                    texty = texty + buttons[i]
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if event.pos[0] >= 750 and event.pos[1] <= 50:
                 if flag:
                     flag = False
                 else:
                     flag = True
+                print("1")
         elif event.type == pygame.KEYUP:  # If user press any key.
             continue
         elif event.type == pygame.QUIT:
@@ -242,30 +257,40 @@ while True:
         stacktube(1)
         start_time_entube=time.time()
 
-    if time.time() - start_time_allpop >= delta_t_allpop:
+    if time.time() - start_time_pop[0] >= delta_t_pop[0]:
         poptube(0)
+        start_time_pop[0] = time.time()
+
+    if time.time() - start_time_pop[1] >= delta_t_pop[1]:
         poptube(1)
-        start_time_allpop = time.time()
+        start_time_pop[1] = time.time()
 
     for i in range(2):
         if len(tube_upper_list[i]) >= 7:
             tube_upper_list[i] = [tube_upper_list[i][0],tube_upper_list[i][1]]
-            delta_t_allpop -= 0.5
+            delta_t_pop[i] -= 0.5
             charlist[i].y = 200
-            #지금 이 문장 때문에 아무것도 안 하고 있으면 어떻게 되는지 보라.
-            start_time_allpop = time.time()
+            # 지금 이 문장 때문에 아무것도 안 하고 있으면 어떻게 되는지 보라.
+            start_time_pop[i] = time.time()
 
     pygame.display.update()
     display.fill(White)
     printimage(wallpaper)
 
+    for i in range(2):
+        printText('pop:'+(str)((int)(10-(time.time()-start_time_pop[i]))), color="Black", pos=(charlist[i].x+27, charlist[i].y-20))
+
     for tubes in tube_under_list: printimage(tubes)
     for i in range(4):
         printText(tube_under_list[i].word, color= "White", pos=(tube_under_list[i].x + 70, tube_under_list[i].y + 50))
 
-    #나와 상대의 튜브 출력
-    for tubes in tube_upper_list[0]: printimage(tubes)
-    for tubes in tube_upper_list[1]: printimage(tubes)
+    shiver()
+
+    # 나와 상대의 튜브 출력
+    for tubes in tube_upper_list[0]:
+        printimage(tubes)
+    for tubes in tube_upper_list[1]:
+        printimage(tubes)
 
     for chars in charlist: printimage(chars)
 
