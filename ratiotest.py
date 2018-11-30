@@ -33,13 +33,16 @@ input_word = ""
 pressed_button = list()
 vel_plus = 0.05
 
+
 #나와 컴퓨터의 튜브가 빠지는 시간간격
 delta_t_allpop = 5
 start_time_allpop = time.time()
 
+
 #컴퓨터가 튜브를 먹는 시간간격
 delta_t_entube = 2
 start_time_entube = time.time()
+
 
 #컴퓨터가 아이템을 먹는 시간간격
 #이후 random으로 이번 아이템을 먹을지 안먹을지, 또는 어디서 먹을지 정하게 하면 좋겠다.
@@ -67,6 +70,7 @@ class Tube:
         self.y = inputy
         self.word = random.choice(wordlist)
 
+
 class Charac:
     def __init__(self,inputx, inputy, w=100, h=100):
         self.charnum = random.randrange(1, 3) + 1
@@ -75,6 +79,7 @@ class Charac:
         self.frog = pygame.transform.scale(self.frog, (w, h))
         self.x = inputx
         self.y = inputy
+
 
 class Otherimage:
     def __init__(self, inputx, inputy, w, h, imaname):
@@ -87,17 +92,14 @@ class Otherimage:
 
 wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
 boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
-
 item1 = item(800, 100, 100, 100)
-
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/test_rule.png")
 play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
-
-#char1,2는 각각 나와 컴퓨터의 캐릭터이며, x와 y좌표를 인자로 받는다.
-char1 = Charac(200,270)
-char2 = Charac(570,270)
-charlist=[char1,char2]
+# char1,2는 각각 나와 컴퓨터의 캐릭터이며, x와 y좌표를 인자로 받는다.
+char1 = Charac(200, 270)
+char2 = Charac(570, 270)
+charlist = [char1,char2]
 
 #단어가 적혀있는 튜브들의 리스트
 tube_under_list=[]
@@ -149,7 +151,7 @@ def itemeffect(num,more):
 
     item1=item(800,100,100,100)
     if num == 1:
-        charlist[more]=Charac(charlist[more].x,charlist[more].y)
+        charlist[more] = Charac(charlist[more].x,charlist[more].y)
     if num == 2:
         pass
     if num == 3:
@@ -169,22 +171,23 @@ while True:
         if event.type == pygame.KEYDOWN:
             pressed = pygame.key.get_pressed()
             buttons = ([pygame.key.name(k) for k, v in enumerate(pressed) if v])
+            print(pressed_button)
+            print(buttons)
             for i in range(len(buttons)):
                 if len(buttons) >= 2:
                     if pressed_button.count(buttons[i]) >= 1:
                         continue
-                    elif buttons[-1] == 'left shift' or buttons[-1] == 'right shift':
-                        for j in range(len(buttons)): buttons[j] = buttons[j].upper()
-                        print(buttons)
-                    else:
-                        pressed_button.extend(buttons[i])
+                    if len(buttons[i]) == 1:
+                        pressed_button.append(buttons[i])
+                    if buttons.count('left shift') >= 1 or buttons.count('right shift') >= 1 and len(buttons[i]) == 1:
+                        buttons[i] = buttons[i].upper()
                 else:
                     pressed_button = buttons
                 if buttons[i] == 'backspace':
                     if len(texty) >= 1:
                         texty = texty[0:len(texty) - 1]
                     continue
-                elif buttons[i] == 'return':
+                if buttons[i] == 'return':
                     chk = False
                     if texty == item1.word:
                         itemvel += vel_plus
@@ -200,20 +203,18 @@ while True:
                                 break
                     texty = ""
                     continue
-                elif buttons[0] == 'space' or buttons[0]=='SPACE':
+                if buttons[i] == 'space':
                     texty += ' '
                     continue
-                elif len(buttons[i]) > 1:
+                if len(buttons[i]) > 1:
                     continue
-                else:
-                    texty = texty + buttons[i]
+                texty = texty + buttons[i]
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if event.pos[0] >= 750 and event.pos[1] <= 50:
                 if flag:
                     flag = False
                 else:
                     flag = True
-                print("1")
         elif event.type == pygame.KEYUP:  # If user press any key.
             continue
         elif event.type == pygame.QUIT:

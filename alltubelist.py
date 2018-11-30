@@ -49,7 +49,7 @@ start_time_enitem = time.time()
 
 class item:
     def __init__(self, inputx, inputy, w, h):
-        self.itemnum=random.randrange(0,10)+1
+        self.itemnum=random.randrange(0,5)+1
         self.imagename = "pyproimage/image"+(str)(self.itemnum)+".png"
         self.frog = pygame.image.load(self.imagename) # 사진파일
         self.frog = pygame.transform.scale(self.frog, (w,h))
