@@ -229,6 +229,12 @@ while True:
                 else:
                     texty = texty + buttons[i]
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if rep and hei * 3 / 4 - 100 <= event.pos[1] <= hei * 3 / 4:
+                if wid/3-50 <= event.pos[0] <= wid/3+50:
+                    pass
+                elif wid*2/3-50 <= event.pos[0]:
+                    pygame.quit()
+                    sys.exit()
             if event.pos[0] >= 750 and event.pos[1] <= 50:
                 if flag:
                     flag = False
@@ -280,8 +286,8 @@ while True:
         display.fill(White)
         printText("Game end", pos=(wid/2-75, hei/2-215), infon=3)
         printText("Your score {}, replay?".format(score), pos=(wid/2-185, hei/3*2-150), infon=3)
-        printimage(Tube(wid/3-50, hei*3/4-100, w=100, h=100))
-        printimage(Tube(wid/3*2-50, hei*3/4-100, w=100, h=100))
+        printimage(Otherimage(wid / 3 - 50, hei * 3 / 4 - 100, 100, 100, "pyproimage/yes.png"))
+        printimage(Otherimage(wid/3*2-50, hei*3/4-100, 100, 100, "pyproimage/no.png"))
         continue
 
     pygame.display.update()
