@@ -1,8 +1,5 @@
-import pygame, sys
-import random
-import time
-import math
-
+import random, time, math, sys, pygame
+pygame.init()
 fp = open('pyprowords.txt', 'r')
 wordlist = []
 for line in fp:
@@ -13,18 +10,17 @@ def printimage(image):
     display.blit(image.frog,(image.x, image.y))
 
 
-def printText(msg, color='BLACK', pos = (0, 512),infon=0):
+def printText(msg, color='BLACK', pos=(0, 512), infon=0):
     textSurface = font[infon].render(msg, True, pygame.Color(color), None)
     textRect = textSurface.get_rect()
     textRect.topleft = pos
     display.blit(textSurface,textRect)
 
 
-White = (255,255,255)
+White = (255, 255, 255)
 wid = 800
 hei = 512 + 50
 
-pygame.init()
 font = [pygame.font.SysFont("consolas", 20),
         pygame.font.SysFont("consolas", 18),
         pygame.font.SysFont("consolas", 16),
@@ -38,16 +34,16 @@ pressed_button = list()
 vel_plus = 0.05
 
 # 나와 컴퓨터의 튜브가 빠지는 시간간격
-delta_t_pop = [10,10]
-start_time_pop = [time.time(),time.time()]
+delta_t_pop = [5, 5]
+start_time_pop = [time.time(), time.time()]
 
 # 컴퓨터가 튜브를 먹는 시간간격
-delta_t_entube = 2
+delta_t_entube = 4
 start_time_entube = time.time()
 
 # 컴퓨터가 아이템을 먹는 시간간격
 # 이후 random으로 이번 아이템을 먹을지 안먹을지, 또는 어디서 먹을지 정하게 하면 좋겠다.
-delta_t_enitem = 3
+delta_t_enitem = 7
 start_time_enitem = time.time()
 
 
@@ -104,10 +100,30 @@ play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
 char1 = Charac(200,270)
 char2 = Charac(570,270)
 charlist=[char1,char2]
-
-# 단어가 적혀있는 튜브들의 리스트
 tube_under_list=[]
-for i in range(4): tube_under_list.append(Tube(200*i,400))
+
+
+def check_use(word):
+    while True:
+        changed = True
+        if word == item1.word:
+            word = random.choice(wordlist)
+            continue
+        for j in tube_under_list:
+            if j.word == word:
+                word = random.choice(wordlist)
+                changed = False
+                break
+        if changed:
+            break
+    return word
+# 단어가 적혀있는 튜브들의 리스트
+
+
+for i in range(4):
+    temp = Tube(200*i, 400)
+    temp.word = check_use(temp.word)
+    tube_under_list.append(temp)
 
 # 나와 컴퓨터의 튜브 리스트이다.
 # tube_upper_list[0] 리스트에는 내 튜브 인스턴스가,
@@ -139,8 +155,9 @@ def shiver():
 
 # more이 0(tube_upper_list의 index!)이면 내 쪽에, 1이면 상대쪽에 튜브를 쌓는 함수
 def stacktube(more):
-    xlist=[130,500]
-    if len(tube_upper_list[more])==0: new_player_tube = Tube(xlist[more], 300)
+    xlist=[130, 500]
+    if len(tube_upper_list[more]) == 0:
+        new_player_tube = Tube(xlist[more], 300)
     else: new_player_tube = Tube(xlist[more], tube_upper_list[more][len(tube_upper_list[more]) - 1].y - 30)
     tube_upper_list[more].append(new_player_tube)
     charlist[more].y -=30
@@ -170,6 +187,7 @@ def itemeffect(num,more):
     global charlist
 
     item1 = item(800, 100)
+    item1.word = check_use(item1.word)
     if num == 1:
         charlist[more] = Charac(charlist[more].x, charlist[more].y)
     if num == 2:
@@ -218,6 +236,7 @@ while True:
                                 score += 1
                                 stacktube(0)
                                 tube_under_list[j] = Tube(tube_under_list[j].x, tube_under_list[j].y)
+                                tube_under_list[j].word = check_use(tube_under_list[j].word)
                                 break
                     texty = ""
                     continue
@@ -230,8 +249,12 @@ while True:
                     texty = texty + buttons[i]
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if rep and hei * 3 / 4 - 100 <= event.pos[1] <= hei * 3 / 4:
-                if wid/3-50 <= event.pos[0] <= wid/3+50:
-                    pass
+                if wid/3-50 <= event.pos[0] <= wid/3+50:    #  초기화
+                    rep = False
+                    texty = ""
+                    pressed_button = []
+                    score = 0
+                    continue
                 elif wid*2/3-50 <= event.pos[0]:
                     pygame.quit()
                     sys.exit()
@@ -265,6 +288,7 @@ while True:
         #컴퓨터가 튜브를 먹는 부분
         change=random.randrange(0,4)
         tube_under_list[change]=Tube(tube_under_list[change].x,tube_under_list[change].y)
+        tube_under_list[change].word=check_use(tube_under_list[change].word)
         stacktube(1)
         start_time_entube=time.time()
 
@@ -295,7 +319,7 @@ while True:
     printimage(wallpaper)
 
     for i in range(2):
-        printText('pop:'+(str)((int)(10-(time.time()-start_time_pop[i]))), "Black", (charlist[i].x+27, charlist[i].y-20), 2)
+        printText('pop:'+(str)((int)(5-(time.time()-start_time_pop[i]))), "Black", (charlist[i].x+27, charlist[i].y-20), 2)
 
     for tubes in tube_under_list: printimage(tubes)
     for i in range(4):
@@ -325,7 +349,9 @@ while True:
         if item1.x < -96:
             printimage(boom)
             if item1.x < -98 and score > 0: score -= 0.1
-        if item1.x < -98: item1 = item(800, 100)
+        if item1.x < -98:
+            item1 = item(800, 100)
+            item1.word = check_use(item1.word)
 
 #  https://blog.naver.com/rsj0908/221007425974  에서 가져옴
 # https://pixlr.com/editor/ 에서 이미지 수정
