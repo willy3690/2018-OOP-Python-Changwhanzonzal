@@ -36,7 +36,7 @@ pressed_button = list()
 vel_plus = 0.05
 
 # 나와 컴퓨터의 튜브가 빠지는 시간간격
-delta_t_pop = [5, 5]
+delta_t_pop = [7, 7]
 start_time_pop = [time.time(), time.time()]
 
 # 컴퓨터가 튜브를 먹는 시간간격
@@ -326,11 +326,19 @@ while True:
     for i in range(2):
         if len(tube_upper_list[i]) >= 7:
             if i == 0:
-                tube_upper_list[i] = [tube_upper_list[i][0], tube_upper_list[i][1]]
-                delta_t_pop[i] -= 0.5
-                charlist[i].y = 200
-                start_time_pop[i] = time.time()
                 lev += 1
+                for j in range(2):
+                    delta_t_pop[j] -= vel_plus
+                    if len(tube_upper_list[j]) >= 2:
+                        tube_upper_list[j] = [tube_upper_list[j][0], tube_upper_list[j][1]]
+                    else:
+                        while len(tube_upper_list[j]) < 2:
+                            stacktube(j)
+                    delta_t_pop[j] -= 0.5
+                    charlist[j].y = 200
+                    start_time_pop[j] = time.time()
+                delta_t_enitem -= vel_plus
+                delta_t_entube -= vel_plus
             else:
                 rep = True
     if rep:
