@@ -143,6 +143,7 @@ sinx = [0, 0.8]
 rep = False
 is_start = True
 lev = 1
+is_unbeatable = [time.time() - 3, time.time() - 3]
 
 
 def shiver():
@@ -201,16 +202,23 @@ def itemeffect(num, more):
     if num == 2:
         start_time_pop[more] += 3
     if num == 3:
-        for i in range(len(tube_upper_list[more])): poptube(more)
-        start_time_pop[more] = time.time()
+        if time.time() - is_unbeatable[more] >= 3:
+            for i in range(len(tube_upper_list[more])): poptube(more)
+            start_time_pop[more] = time.time()
     if num == 4:
-        pass
+        is_unbeatable[more] = time.time()
     if num == 5:
-        pass
+        if more == 1 and time.time() - is_unbeatable[0] >= 3:
+            pass
+        elif more == 0 and time.time() - is_unbeatable[1] >= 3:
+            pass
     if num == 6:
         for i in range(3): stacktube(more)
     if num == 7:
-        pass
+        if more == 1 and time.time() - is_unbeatable[0] >= 3:
+            pass
+        elif more == 0 and time.time() - is_unbeatable[1] >= 3:
+            pass
 
 
 while True:
