@@ -26,7 +26,8 @@ font = [pygame.font.SysFont("consolas", 20),
         pygame.font.SysFont("consolas", 18),
         pygame.font.SysFont("consolas", 16),
         pygame.font.SysFont("consolas", 30),
-        pygame.font.SysFont("나눔고딕", 50)]
+        pygame.font.SysFont("나눔고딕", 50),
+        pygame.font.SysFont("나눔고딕", 16)]
 display = pygame.display.set_mode((wid, hei))
 display.fill(White)
 pygame.display.set_caption("해상구조 SOS")
@@ -365,6 +366,8 @@ while True:
     for i in range(2):
         printText('pop:' + (str)((int)(5 - (time.time() - start_time_pop[i]))), "Black",
                   (charlist[i].x + 27, charlist[i].y - 20), 2)
+        if time.time() - is_unbeatable[i] < 3:
+            printText("무적", "Black", (charlist[i].x + 35, charlist[i].y - 40), infon=5)
 
     for tubes in tube_under_list: printimage(tubes)
     for i in range(4):
