@@ -26,7 +26,8 @@ font = [pygame.font.SysFont("consolas", 20),
         pygame.font.SysFont("consolas", 18),
         pygame.font.SysFont("consolas", 16),
         pygame.font.SysFont("consolas", 30),
-        pygame.font.SysFont("나눔고딕", 50)]
+        pygame.font.SysFont("나눔고딕", 50),
+        pygame.font.SysFont("나눔고딕", 16)]
 display = pygame.display.set_mode((wid, hei))
 display.fill(White)
 pygame.display.set_caption("해상구조 SOS")
@@ -144,6 +145,7 @@ rep = False
 is_start = True
 lev = 1
 is_unbeatable = [time.time() - 3, time.time() - 3]
+is_freeze = [time.time() - 2, time.time() - 2]
 
 
 def shiver():
@@ -172,13 +174,32 @@ def stacktube(more):
     charlist[more].y -= 30
 
 
+def level_up():
+    global lev, delta_t_enitem, delta_t_entube
+    lev += 1
+    for j in range(2):
+        delta_t_pop[j] -= vel_plus
+        if len(tube_upper_list[j]) >= 2:
+            tube_upper_list[j] = [tube_upper_list[j][0], tube_upper_list[j][1]]
+        else:
+            while len(tube_upper_list[j]) < 2:
+                stacktube(j)
+        charlist[j].y = 200
+        start_time_pop[j] = time.time()
+    delta_t_enitem -= vel_plus
+    delta_t_entube -= vel_plus
+
+
 def poptube(more):
     global rep
     if len(tube_upper_list[more]) > 0:
         tube_upper_list[more].pop()
         charlist[more].y += 30
     else:
-        rep = True
+        if more == 0:
+            rep = True
+        else:
+            level_up()
 
 
 # 나와 상대 쪽에 튜브를 두 개씩 쌓는다.
@@ -216,9 +237,9 @@ def itemeffect(num, more):
         for i in range(3): stacktube(more)
     if num == 7:
         if more == 1 and time.time() - is_unbeatable[0] >= 3:
-            pass
+            is_freeze[0] = time.time()
         elif more == 0 and time.time() - is_unbeatable[1] >= 3:
-            pass
+            is_freeze[1] = time.time()
 
 
 while True:
@@ -256,20 +277,21 @@ while True:
                         texty = texty[0:len(texty) - 1]
                     continue
                 elif buttons[i] == 'return':
-                    chk = False
-                    if texty == item1.word:
-                        itemvel += vel_plus
-                        score += 1
-                        itemeffect(item1.itemnum, 0)
-                        chk = True
-                    if not chk:
-                        for j in range(4):
-                            if texty == tube_under_list[j].word:
-                                score += 1
-                                stacktube(0)
-                                tube_under_list[j] = Tube(tube_under_list[j].x, tube_under_list[j].y)
-                                tube_under_list[j].word = check_use(tube_under_list[j].word)
-                                break
+                    if time.time() - is_freeze[0] >= 2:
+                        chk = False
+                        if texty == item1.word:
+                            itemvel += vel_plus
+                            score += 1
+                            itemeffect(item1.itemnum, 0)
+                            chk = True
+                        if not chk:
+                            for j in range(4):
+                                if texty == tube_under_list[j].word:
+                                    score += 1
+                                    stacktube(0)
+                                    tube_under_list[j] = Tube(tube_under_list[j].x, tube_under_list[j].y)
+                                    tube_under_list[j].word = check_use(tube_under_list[j].word)
+                                    break
                     texty = ""
                     continue
                 elif buttons[0] == 'space':
@@ -311,12 +333,12 @@ while True:
         start_time_enitem = 2 * time.time() - start_time_enitem
         continue
 
-    if time.time() - start_time_enitem >= delta_t_enitem:
+    if time.time() - start_time_enitem >= delta_t_enitem and time.time() - is_freeze[1] >= 2:
         # 컴퓨터가 아이템을 먹는 부분
         itemeffect(item1.itemnum, 1)
         start_time_enitem = time.time()
 
-    if time.time() - start_time_entube >= delta_t_entube:
+    if time.time() - start_time_entube >= delta_t_entube and time.time() - is_freeze[1] >= 2:
         # 컴퓨터가 튜브를 먹는 부분
         change = random.randrange(0, 4)
         tube_under_list[change] = Tube(tube_under_list[change].x, tube_under_list[change].y)
@@ -334,19 +356,7 @@ while True:
     for i in range(2):
         if len(tube_upper_list[i]) >= 7:
             if i == 0:
-                lev += 1
-                for j in range(2):
-                    delta_t_pop[j] -= vel_plus
-                    if len(tube_upper_list[j]) >= 2:
-                        tube_upper_list[j] = [tube_upper_list[j][0], tube_upper_list[j][1]]
-                    else:
-                        while len(tube_upper_list[j]) < 2:
-                            stacktube(j)
-                    delta_t_pop[j] -= 0.5
-                    charlist[j].y = 200
-                    start_time_pop[j] = time.time()
-                delta_t_enitem -= vel_plus
-                delta_t_entube -= vel_plus
+                level_up()
             else:
                 rep = True
     if rep:
@@ -363,9 +373,12 @@ while True:
     printimage(wallpaper)
 
     for i in range(2):
-        printText('pop:' + (str)((int)(5 - (time.time() - start_time_pop[i]))), "Black",
+        printText('pop:' + (str)((int)(7 - (time.time() - start_time_pop[i]))), "Black",
                   (charlist[i].x + 27, charlist[i].y - 20), 2)
-
+        if time.time() - is_unbeatable[i] < 3:
+            printText("무적", "Black", (charlist[i].x + 35, charlist[i].y - 40), infon=5)
+        if time.time() - is_freeze[i] < 2:
+            printText("얼음", "Black", (charlist[i].x + 35, charlist[i].y - 40), infon=5)
     for tubes in tube_under_list: printimage(tubes)
     for i in range(4):
         printText(tube_under_list[i].word, color="White", pos=(tube_under_list[i].x + 70, tube_under_list[i].y + 50))
