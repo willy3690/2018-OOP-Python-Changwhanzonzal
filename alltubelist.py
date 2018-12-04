@@ -184,7 +184,7 @@ def level_up():
         else:
             while len(tube_upper_list[j]) < 2:
                 stacktube(j)
-        charlist[j].y = 200
+        charlist[j].y = 210
         start_time_pop[j] = time.time()
     delta_t_enitem -= vel_plus
     delta_t_entube -= vel_plus
@@ -392,6 +392,9 @@ while True:
         printimage(tubes)
 
     for chars in charlist: printimage(chars)
+    for i in range(2):
+        if len(tube_upper_list[i]) >= 1:
+            printText(tube_upper_list[i][-1].word, 'White', (tube_upper_list[i][-1].x + 70, tube_upper_list[i][-1].y + 50))
 
     printimage(pause_image)
 
