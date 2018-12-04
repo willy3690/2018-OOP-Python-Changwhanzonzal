@@ -173,13 +173,33 @@ def stacktube(more):
     charlist[more].y -= 30
 
 
+def level_up():
+    global lev, delta_t_enitem, delta_t_entube
+    lev += 1
+    for j in range(2):
+        delta_t_pop[j] -= vel_plus
+        if len(tube_upper_list[j]) >= 2:
+            tube_upper_list[j] = [tube_upper_list[j][0], tube_upper_list[j][1]]
+        else:
+            while len(tube_upper_list[j]) < 2:
+                stacktube(j)
+        delta_t_pop[j] -= 0.5
+        charlist[j].y = 200
+        start_time_pop[j] = time.time()
+    delta_t_enitem -= vel_plus
+    delta_t_entube -= vel_plus
+
+
 def poptube(more):
     global rep
     if len(tube_upper_list[more]) > 0:
         tube_upper_list[more].pop()
         charlist[more].y += 30
     else:
-        rep = True
+        if more == 0:
+            rep = True
+        else:
+            level_up()
 
 
 # 나와 상대 쪽에 튜브를 두 개씩 쌓는다.
@@ -335,19 +355,7 @@ while True:
     for i in range(2):
         if len(tube_upper_list[i]) >= 7:
             if i == 0:
-                lev += 1
-                for j in range(2):
-                    delta_t_pop[j] -= vel_plus
-                    if len(tube_upper_list[j]) >= 2:
-                        tube_upper_list[j] = [tube_upper_list[j][0], tube_upper_list[j][1]]
-                    else:
-                        while len(tube_upper_list[j]) < 2:
-                            stacktube(j)
-                    delta_t_pop[j] -= 0.5
-                    charlist[j].y = 200
-                    start_time_pop[j] = time.time()
-                delta_t_enitem -= vel_plus
-                delta_t_entube -= vel_plus
+                level_up()
             else:
                 rep = True
     if rep:
