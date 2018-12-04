@@ -94,7 +94,7 @@ wallpaper = Otherimage(0, 212, 800, 300, "pyproimage/wallpaper.png")
 boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
 
 item1 = item(800, 100)
-
+char_tube_word = [random.choice(wordlist), random.choice(wordlist)]
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 pause_im1 = Otherimage(0, 0, wid, hei, "pyproimage/test_rule.png")
 play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
@@ -114,6 +114,11 @@ def check_use(word):
             continue
         for j in tube_under_list:
             if j.word == word:
+                word = random.choice(wordlist)
+                changed = False
+                break
+        for j in char_tube_word:
+            if j == word:
                 word = random.choice(wordlist)
                 changed = False
                 break
@@ -292,6 +297,13 @@ while True:
                                     tube_under_list[j] = Tube(tube_under_list[j].x, tube_under_list[j].y)
                                     tube_under_list[j].word = check_use(tube_under_list[j].word)
                                     break
+                            for j in range(2):
+                                if len(tube_upper_list[j]):
+                                    if texty == char_tube_word[j]:
+                                        poptube(j)
+                                        char_tube_word[j] = random.choice(wordlist)
+                                        char_tube_word[j] = check_use(char_tube_word[j])
+                                        break
                     texty = ""
                     continue
                 elif buttons[0] == 'space':
@@ -394,7 +406,7 @@ while True:
     for chars in charlist: printimage(chars)
     for i in range(2):
         if len(tube_upper_list[i]) >= 1:
-            printText(tube_upper_list[i][-1].word, 'White', (tube_upper_list[i][-1].x + 70, tube_upper_list[i][-1].y + 50))
+            printText(char_tube_word[i], 'White', (tube_upper_list[i][-1].x + 70, tube_upper_list[i][-1].y + 50))
 
     printimage(pause_image)
 
