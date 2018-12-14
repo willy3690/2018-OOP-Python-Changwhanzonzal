@@ -21,7 +21,6 @@ def printText(msg, color='BLACK', pos=(0, 512), infon=0):
 White = (255, 255, 255)
 wid = 800
 hei = 512 + 50
-
 font = [pygame.font.SysFont("consolas", 20),
         pygame.font.SysFont("consolas", 18),
         pygame.font.SysFont("consolas", 16),
@@ -145,7 +144,6 @@ def check_use(word):
 
 # 단어가 적혀있는 튜브들의 리스트
 
-
 for i in range(4):
     temp = Tube(200 * i, 400)
     temp.word = check_use(temp.word)
@@ -155,9 +153,7 @@ for i in range(4):
 # tube_upper_list[0] 리스트에는 내 튜브 인스턴스가,
 # tube_upper_list[1] 리스트에는 상대 튜브 인스턴스가 들어있다.
 tube_upper_list = [[], []]
-
 flag = False
-
 score = float(0)
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 itemvel = 2
@@ -350,7 +346,39 @@ while True:
                     rep = False
                     texty = ""
                     pressed_button = []
-                    score = 0
+                    score = float(0)
+                    delta_t_pop = [7, 7]
+                    start_time_pop = [time.time(), time.time()]
+                    delta_t_entube = 4
+                    start_time_entube = time.time()
+                    delta_t_enitem = 7
+                    start_time_enitem = time.time()
+                    item1 = item(800, 100)
+                    char_tube_word = [random.choice(wordlist), random.choice(wordlist)]
+                    flag = False
+                    tube_upper_list = [[], []]
+                    pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
+                    itemvel = 2
+                    sinx = [0, 0.8]
+                    is_start = True
+                    lev = 1
+                    is_unbeatable = [time.time() - 3, time.time() - 3]
+                    is_freeze = [time.time() - 2, time.time() - 2]
+                    is_confuse = [time.time() - 3, time.time() - 3]
+                    char1 = Charac(200, 270)
+                    char2 = Charac(570, 270)
+                    charlist = [char1, char2]
+                    for i in range(2):
+                        stacktube(0)
+                        stacktube(1)
+                    tube_under_list = []
+                    iteminfo = []
+                    for i in range(4):
+                        temp = Tube(200 * i, 400)
+                        temp.word = check_use(temp.word)
+                        tube_under_list.append(temp)
+
+
                     continue
                 elif wid * 2 / 3 - 50 <= event.pos[0]:
                     pygame.quit()
