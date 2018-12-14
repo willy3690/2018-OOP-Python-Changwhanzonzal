@@ -48,6 +48,9 @@ start_time_entube = time.time()
 delta_t_enitem = 7
 start_time_enitem = time.time()
 
+delta_t_enpl = 5
+start_time_enpl = time.time()
+
 
 class item:
     def __init__(self, inputx, inputy, w=80, h=80):
@@ -432,7 +435,15 @@ while True:
         else:
             stacktube(0)
         start_time_entube = time.time()
-
+    if time.time() - start_time_enpl >= delta_t_enpl and time.time() - is_freeze[1] >= 2:
+        if time.time() - is_confuse[1] >= 3:
+            poptube(0)
+            char_tube_word[0] = random.choice(wordlist)
+            char_tube_word[0] = check_use(char_tube_word[0])
+        else:
+            poptube(1)
+            char_tube_word[1] = random.choice(wordlist)
+            char_tube_word[1] = check_use(char_tube_word[1])
     if time.time() - start_time_pop[0] >= delta_t_pop[0]:
         poptube(0)
         start_time_pop[0] = time.time()
