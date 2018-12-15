@@ -33,23 +33,16 @@ pygame.display.set_caption("해상구조 SOS")
 texty = ""
 input_word = ""
 pressed_button = list()
-vel_plus = 0.05
+vel_plus = 0.1
+vel_tube = 0.1
 
 # 나와 컴퓨터의 튜브가 빠지는 시간간격
 delta_t_pop = [7, 7]
 start_time_pop = [time.time(), time.time()]
 
 # 컴퓨터가 튜브를 먹는 시간간격
-delta_t_entube = 4
-start_time_entube = time.time()
-
-# 컴퓨터가 아이템을 먹는 시간간격
-# 이후 random으로 이번 아이템을 먹을지 안먹을지, 또는 어디서 먹을지 정하게 하면 좋겠다.
-delta_t_enitem = 7
-start_time_enitem = time.time()
-
-delta_t_enpl = 5
-start_time_enpl = time.time()
+en_delta_t = 4
+en_start_time = time.time()
 
 
 class item:
@@ -164,9 +157,11 @@ sinx = [0, 0.8]
 rep = False
 is_start = True
 lev = 1
+is_level_up = time.time() - 1
 is_unbeatable = [time.time() - 3, time.time() - 3]
 is_freeze = [time.time() - 2, time.time() - 2]
 is_confuse = [time.time() - 3, time.time() - 3]
+com_move = 0
 
 
 def shiver():
@@ -196,10 +191,12 @@ def stacktube(more):
 
 
 def level_up():
-    global lev, delta_t_enitem, delta_t_entube
+    global lev, en_delta_t, start_time_pop, item1
     lev += 1
     for j in range(2):
-        delta_t_pop[j] -= vel_plus
+        delta_t_pop[j] -= vel_tube
+        char_tube_word[j] = random.choice(wordlist)
+        char_tube_word[j] = check_use(char_tube_word[j])
         if len(tube_upper_list[j]) >= 2:
             tube_upper_list[j] = [tube_upper_list[j][0], tube_upper_list[j][1]]
         else:
@@ -207,8 +204,8 @@ def level_up():
                 stacktube(j)
         charlist[j].y = 210
         start_time_pop[j] = time.time()
-    delta_t_enitem -= vel_plus
-    delta_t_entube -= vel_plus
+    en_delta_t -= vel_plus
+    item1 = item(800, 100)
 
 
 def poptube(more):
@@ -352,10 +349,9 @@ while True:
                     score = float(0)
                     delta_t_pop = [7, 7]
                     start_time_pop = [time.time(), time.time()]
-                    delta_t_entube = 4
-                    start_time_entube = time.time()
-                    delta_t_enitem = 7
-                    start_time_enitem = time.time()
+                    en_delta_t = 4
+                    en_start_time = time.time()
+                    com_move = 0
                     item1 = item(800, 100)
                     char_tube_word = [random.choice(wordlist), random.choice(wordlist)]
                     flag = False
@@ -375,7 +371,6 @@ while True:
                         stacktube(0)
                         stacktube(1)
                     tube_under_list = []
-                    iteminfo = []
                     for i in range(4):
                         temp = Tube(200 * i, 400)
                         temp.word = check_use(temp.word)
@@ -413,19 +408,19 @@ while True:
             printimage(boxes[boxflag])
 
         for i in range(2): start_time_pop[i] = 2 * time.time() - start_time_pop[i]
-        start_time_entube = 2 * time.time() - start_time_entube
-        start_time_enitem = 2 * time.time() - start_time_enitem
+        en_start_time = 2 * time.time() - en_start_time
         continue
-
-    if time.time() - start_time_enitem >= delta_t_enitem and time.time() - is_freeze[1] >= 2:
+    if time.time() - en_start_time >= en_delta_t:
+        com_move = random.randint(1, 3)
+        en_start_time = time.time()
+    if com_move == 1 and time.time() - is_freeze[1] >= 2:
         # 컴퓨터가 아이템을 먹는 부분
         if time.time() - is_confuse[1] >= 3:
             itemeffect(item1.itemnum, 1)
         else:
             itemeffect(item1.itemnum, 0)
-        start_time_enitem = time.time()
 
-    if time.time() - start_time_entube >= delta_t_entube and time.time() - is_freeze[1] >= 2:
+    if com_move == 2 and time.time() - is_freeze[1] >= 2:
         # 컴퓨터가 튜브를 먹는 부분
         change = random.randrange(0, 4)
         tube_under_list[change] = Tube(tube_under_list[change].x, tube_under_list[change].y)
@@ -434,8 +429,7 @@ while True:
             stacktube(1)
         else:
             stacktube(0)
-        start_time_entube = time.time()
-    if time.time() - start_time_enpl >= delta_t_enpl and time.time() - is_freeze[1] >= 2:
+    if com_move == 3 and time.time() - is_freeze[1] >= 2:
         if time.time() - is_confuse[1] >= 3:
             poptube(0)
             char_tube_word[0] = random.choice(wordlist)
@@ -444,6 +438,7 @@ while True:
             poptube(1)
             char_tube_word[1] = random.choice(wordlist)
             char_tube_word[1] = check_use(char_tube_word[1])
+    com_move = 0
     if time.time() - start_time_pop[0] >= delta_t_pop[0]:
         poptube(0)
         start_time_pop[0] = time.time()
