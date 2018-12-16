@@ -46,3 +46,10 @@ checkpoint
 cyclin
 MPF
 dijkstra
+speed
+velocity
+friction
+temperature
+permutation
+combination
+molecule
