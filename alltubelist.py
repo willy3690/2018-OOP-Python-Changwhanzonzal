@@ -203,9 +203,9 @@ def level_up():
             while len(tube_upper_list[j]) < 2:
                 stacktube(j)
         charlist[j].y = 210
-        start_time_pop[j] = time.time()
     en_delta_t -= vel_plus
     item1 = item(800, 100)
+    start_time_pop = [time.time(), time.time()]
     is_unbeatable = [time.time() - 3, time.time() - 3]
     is_freeze = [time.time() - 2, time.time() - 2]
     is_confuse = [time.time() - 3, time.time() - 3]
@@ -281,6 +281,7 @@ while True:
         break
     time.sleep(0.1)
     start_time_pop = [time.time(), time.time()]
+    en_start_time = time.time()
 
 while True:
     for event in pygame.event.get():
@@ -304,7 +305,7 @@ while True:
                     if time.time() - is_freeze[0] >= 2:
                         chk = False
                         if texty == item1.word:
-                            itemvel += 0.1
+                            itemvel += 0.05
                             score += 1
                             if time.time() - is_confuse[0] >=3 :
                                 itemeffect(item1.itemnum, 0)
