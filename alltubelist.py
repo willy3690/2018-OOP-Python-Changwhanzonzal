@@ -33,8 +33,8 @@ pygame.display.set_caption("해상구조 SOS")
 texty = ""
 input_word = ""
 pressed_button = list()
-vel_plus = 0.1
-vel_tube = 0.1
+vel_plus = 0.2
+vel_tube = 0.2
 
 # 나와 컴퓨터의 튜브가 빠지는 시간간격
 delta_t_pop = [7, 7]
@@ -150,7 +150,7 @@ for i in range(4):
 # tube_upper_list[1] 리스트에는 상대 튜브 인스턴스가 들어있다.
 tube_upper_list = [[], []]
 flag = False
-score = float(0)
+score = 0
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
 itemvel = 2
 sinx = [0, 0.8]
@@ -276,6 +276,7 @@ while True:
     if not is_start:
         break
     time.sleep(0.1)
+    start_time_pop = [time.time(), time.time()]
 
 while True:
     for event in pygame.event.get():
@@ -346,7 +347,7 @@ while True:
                     rep = False
                     texty = ""
                     pressed_button = []
-                    score = float(0)
+                    score = 0
                     delta_t_pop = [7, 7]
                     start_time_pop = [time.time(), time.time()]
                     en_delta_t = 4
@@ -456,7 +457,7 @@ while True:
         pygame.display.update()
         display.fill(White)
         printText("Game end", pos=(wid / 2 - 75, hei / 2 - 215), infon=3)
-        printText("Your score {}, replay?".format(round(score, 2)), pos=(wid / 2 - 185, hei / 3 * 2 - 150), infon=3)
+        printText("Your score {}, replay?".format(score), pos=(wid / 2 - 185, hei / 3 * 2 - 150), infon=3)
         printimage(Otherimage(wid / 3 - 50, hei * 3 / 4 - 100, 100, 100, "pyproimage/yes.png"))
         printimage(Otherimage(wid / 3 * 2 - 50, hei * 3 / 4 - 100, 100, 100, "pyproimage/no.png"))
         continue
@@ -497,13 +498,12 @@ while True:
 
     printText('Please enter the word')
     printText(texty, "black", (0, 532))
-    printText('Score: ' + str(round(score, 1)), "black", (0, 0))
+    printText('Score: ' + str(score), "black", (0, 0))
     printText('Level: ' + str(lev), "black", (0, 20))
     if item1.x > -100:
         item1.x -= itemvel
         if item1.x < -96:
             printimage(boom)
-            if item1.x < -98 and score > 0: score -= 0.1
         if item1.x < -98:
             item1 = item(800, 100)
             item1.word = check_use(item1.word)
