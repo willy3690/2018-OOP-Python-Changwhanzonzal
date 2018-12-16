@@ -41,7 +41,8 @@ pygame, matplotlib, tkinter 등
 
 황창환: 아이템 관련 작업, 점수 관련 작업, pause 버튼, 단어 풀 제작, 이미지 풀 제작
 
-## 9. 기타
+## 9. 기타(추가로 요구하신 실행방법)
+import 해야 할 모듈에는 random, sys, time, math, pygame이 있으므로 pygame이 없다면 다운받아야 한다. 코드가 저장되어 있는 곳과 같은 위치에 게임 내 등장하는 이미지들이 저장되어 있는 폴더인 pyproimage를 저장해 놓고, 단어풀인 pyprowords 저장한다. 이후 shift+F10으로 코드를 작동시킨다.
 
 <hr>
 
