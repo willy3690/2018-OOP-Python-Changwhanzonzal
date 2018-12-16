@@ -91,7 +91,7 @@ boom = Otherimage(-50, 100, 100, 100, "pyproimage/boom.png")
 item1 = item(800, 100)
 char_tube_word = [random.choice(wordlist), random.choice(wordlist)]
 pause_image = Otherimage(750, 0, 50, 50, "pyproimage/Pause.png")
-pause_im1 = Otherimage(-70, -150, wid, hei, "pyproimage/test_rule.png")
+pause_im1 = Otherimage(-40, -150, wid + 60, hei, "pyproimage/rule.png")
 play_image = Otherimage(750, 0, 50, 50, "pyproimage/Play.png")
 
 # char1,2는 각각 나와 컴퓨터의 캐릭터이며, x와 y좌표를 인자로 받는다.
