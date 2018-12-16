@@ -191,7 +191,7 @@ def stacktube(more):
 
 
 def level_up():
-    global lev, en_delta_t, start_time_pop, item1
+    global lev, en_delta_t, start_time_pop, item1, is_confuse, is_freeze, is_unbeatable, is_level_up
     lev += 1
     for j in range(2):
         delta_t_pop[j] -= vel_tube
@@ -206,6 +206,10 @@ def level_up():
         start_time_pop[j] = time.time()
     en_delta_t -= vel_plus
     item1 = item(800, 100)
+    is_unbeatable = [time.time() - 3, time.time() - 3]
+    is_freeze = [time.time() - 2, time.time() - 2]
+    is_confuse = [time.time() - 3, time.time() - 3]
+    is_level_up = time.time()
 
 
 def poptube(more):
@@ -300,7 +304,7 @@ while True:
                     if time.time() - is_freeze[0] >= 2:
                         chk = False
                         if texty == item1.word:
-                            itemvel += vel_plus
+                            itemvel += 0.1
                             score += 1
                             if time.time() - is_confuse[0] >=3 :
                                 itemeffect(item1.itemnum, 0)
@@ -320,7 +324,7 @@ while True:
                                     break
                             for j in range(2):
                                 if len(tube_upper_list[j]):
-                                    if time.time() - is_confuse[0] >= 3:
+                                    if time.time() - is_confuse[0] >= 3 and time.time() - is_unbeatable[j] >= 3:
                                         if texty == char_tube_word[j]:
                                             poptube(j)
                                             char_tube_word[j] = random.choice(wordlist)
@@ -365,6 +369,7 @@ while True:
                     is_unbeatable = [time.time() - 3, time.time() - 3]
                     is_freeze = [time.time() - 2, time.time() - 2]
                     is_confuse = [time.time() - 3, time.time() - 3]
+                    is_level_up = time.time() - 1
                     char1 = Charac(200, 270)
                     char2 = Charac(570, 270)
                     charlist = [char1, char2]
@@ -431,7 +436,7 @@ while True:
         else:
             stacktube(0)
     if com_move == 3 and time.time() - is_freeze[1] >= 2:
-        if time.time() - is_confuse[1] >= 3:
+        if time.time() - is_confuse[1] >= 3 and time.time() - is_unbeatable[0] >= 3:
             poptube(0)
             char_tube_word[0] = random.choice(wordlist)
             char_tube_word[0] = check_use(char_tube_word[0])
@@ -478,7 +483,8 @@ while True:
     for tubes in tube_under_list: printimage(tubes)
     for i in range(4):
         printText(tube_under_list[i].word, color="White", pos=(tube_under_list[i].x + 70, tube_under_list[i].y + 50))
-
+    if time.time() - is_level_up < 1:
+        printText('Level up!', 'BLACK', pos=(wid/2 - 80, 50), infon=3)
     shiver()
 
     # 나와 상대의 튜브 출력
